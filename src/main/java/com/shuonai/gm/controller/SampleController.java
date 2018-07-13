@@ -44,7 +44,7 @@ public class SampleController {
         return CommonUtil.ToResultHashMap(status,message,data);
     }
 
-
+    //我就皮那么一下
     @RequestMapping(value = "/helloWorld")
     public Map helloWorld(HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<String, Object>();

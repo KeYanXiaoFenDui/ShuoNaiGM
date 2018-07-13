@@ -1,0 +1,17 @@
+spring:
+  jpa:
+    database: MYSQL
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: jdbc:mysql://anjun.chgot.win:10002/amp
+    username: amp
+    password: amp123456*
+    driver-class-name: com.mysql.jdbc.Driver
+management:
+  security:
+    enabled: false
+
+mybatis:
+    configuration:
+      map-underscore-to-camel-case: true

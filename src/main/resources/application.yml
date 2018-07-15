@@ -8,6 +8,14 @@ spring:
     username: amp
     password: amp123456*
     driver-class-name: com.mysql.jdbc.Driver
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    check-template-location: true
+    suffix: .html
+    encoding: UTF-8
+    content-type: text/html
+    mode: HTML5
 management:
   security:
     enabled: false
@@ -15,3 +23,6 @@ management:
 mybatis:
     configuration:
       map-underscore-to-camel-case: true
+
+
+

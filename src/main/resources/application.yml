@@ -16,6 +16,9 @@ spring:
     encoding: UTF-8
     content-type: text/html
     mode: HTML5
+  devtools:
+    restart:
+      enabled: true
 management:
   security:
     enabled: false

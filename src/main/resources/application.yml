@@ -4,10 +4,21 @@ spring:
     hibernate:
       ddl-auto: validate
   datasource:
-    url: jdbc:mysql://anjun.chgot.win:10002/amp
-    username: amp
-    password: amp123456*
+    url: jdbc:mysql://120.79.41.87:3306/gmdb
+    username: root
+    password: Keyanxiaofendui007
     driver-class-name: com.mysql.jdbc.Driver
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    check-template-location: true
+    suffix: .html
+    encoding: UTF-8
+    content-type: text/html
+    mode: HTML5
+  devtools:
+    restart:
+      enabled: true
 management:
   security:
     enabled: false
@@ -15,3 +26,6 @@ management:
 mybatis:
     configuration:
       map-underscore-to-camel-case: true
+
+
+

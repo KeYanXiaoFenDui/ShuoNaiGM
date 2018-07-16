@@ -4,7 +4,7 @@ spring:
     hibernate:
       ddl-auto: validate
   datasource:
-    url: jdbc:mysql://120.79.41.87:3306/gmdb
+    url: jdbc:mysql://120.79.41.87:3306/gmdb?useUnicode=true&characterEncoding=UTF-8
     username: root
     password: Keyanxiaofendui007
     driver-class-name: com.mysql.jdbc.Driver
@@ -26,6 +26,5 @@ management:
 mybatis:
     configuration:
       map-underscore-to-camel-case: true
-
 
 

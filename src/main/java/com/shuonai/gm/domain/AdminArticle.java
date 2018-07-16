@@ -13,6 +13,7 @@ public class AdminArticle implements Serializable {
     private String articleContent;//文章正文
     private String articleAuthor;//文章作者
     private String type;//0' COMMENT '0 - 普通文章
+    private String state;//0 - 无效；1 - 正常；2 - 已删除
     private Date createtime;//创建时间
     private Date updatetime;//更新时间
 
@@ -104,4 +105,11 @@ public class AdminArticle implements Serializable {
         this.updatetime = updatetime;
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 }

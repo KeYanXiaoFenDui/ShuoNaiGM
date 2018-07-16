@@ -6,6 +6,8 @@ import com.shuonai.gm.service.IAdminArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AdminArticleServiceImpl implements IAdminArticleService {
     @Autowired
@@ -29,5 +31,20 @@ public class AdminArticleServiceImpl implements IAdminArticleService {
     @Override
     public AdminArticle getAdminArticle(int id) {
         return adminArticleMapper.getAdminArticle(id);
+    }
+
+    @Override
+    public List<AdminArticle> queryArticleByCatalogId(int catalogId) {
+        return adminArticleMapper.queryAdminArticleByCatalogId(catalogId);
+    }
+
+    @Override
+    public List<AdminArticle> queryArticleByCatalogCode(String catalogCode) {
+        return adminArticleMapper.queryAdminArticleByCatalogCode(catalogCode);
+    }
+
+    @Override
+    public List<AdminArticle> queryArticleLikeTitle(String title_like) {
+        return adminArticleMapper.queryAdminArticleTitleLike(title_like);
     }
 }

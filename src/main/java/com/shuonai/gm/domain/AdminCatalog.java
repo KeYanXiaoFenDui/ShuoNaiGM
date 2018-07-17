@@ -10,6 +10,7 @@ public class AdminCatalog implements Serializable {
     private String catalogName;//栏目名称
     private String catalogPoster;//栏目海报图url
     private String catalogSummary;//栏目简介
+    private String state;//0 - 无效；1 - 正常；2 - 已删除
     private Date createtime;//
     private Date updatetime;//
 
@@ -77,4 +78,11 @@ public class AdminCatalog implements Serializable {
         this.updatetime = updatetime;
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 }

@@ -28,7 +28,7 @@ public class ShangXianUtil {
     private static int fail = 0;
 
     public static void main(String[] args) {
-        factory("D:/桌面文件/ssss.txt","D:/桌面文件/test");
+        factory("C:/Users/冼世龙/Desktop/ssss.txt","C:/Users/冼世龙/Desktop/test");
 //        dllTo_aAsASQL("");
 //        domainParamToSetMethod("s");
     }

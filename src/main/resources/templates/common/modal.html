@@ -1,0 +1,192 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta content="text/html;charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/bootstrap/css/bootstrap-theme.min.css}" rel="stylesheet"/>
+    <style>
+        .dialog-open{
+            overflow-y:hidden !important;
+        }
+        .rs-overlay{
+            background:#000;
+            opacity:.5;
+            filter: alpha(opacity=50);
+            position: fixed;
+            z-index: 1000;
+            top:0;
+            bottom:0;
+            left:0;
+            right:0;
+            display: none;
+        }
+        .rs-dialog{
+            display: none;
+            opacity: 0;
+            overflow: hidden;
+            position: fixed;
+            top:0;
+            bottom:0;
+            left:0;
+            right:0;
+            z-index: 1040;
+            -webkit-overflow-scrolling: touch;
+            outline: 0;
+            /*background: rgba(0,0,0,.5);*/
+            -webkit-transition: opacity .15s linear;
+            -o-transition: opacity .15s linear;
+            transition: opacity .15s linear;
+        }
+        .dialog-open .rs-dialog{
+            overflow-x:hidden;
+            overflow-y:auto;
+        }
+        .rs-dialog.in{
+            opacity: 1;
+        }
+        .rs-dialog .rs-dialog-box {
+            -webkit-transform: translate(0, -25%);
+            -ms-transform: translate(0, -25%);
+            -o-transform: translate(0, -25%);
+            transform: translate(0, -25%);
+            -webkit-transition: -webkit-transform 0.3s ease-out;
+            -o-transition: -o-transform 0.3s ease-out;
+            transition: transform 0.3s ease-out;
+        }
+        .rs-dialog.in .rs-dialog-box {
+            -webkit-transform: translate(0, 0);
+            -ms-transform: translate(0, 0);
+            -o-transform: translate(0, 0);
+            transform: translate(0, 0);
+        }
+        .rs-dialog .rs-dialog-box{
+            position: relative;
+            margin:30px auto;
+            width: 600px;
+            background-color: #ffffff;
+            border-radius:10px;
+            border: 1px solid #999999;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+        }
+        .logged-in .rs-dialog .rs-dialog-box{
+            margin-top:60px;
+        }
+        .rs-dialog-box a.close{
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            width: 25px;
+            height: 25px;
+            padding: 0;
+            line-height: 25px;
+            font-size:20px;
+            font-family:Arial,sans-serif;
+            font-weight:bold;
+            text-decoration:none;
+            text-align:center;
+            text-shadow: 0 1px 0 #ffffff;
+            color: #fff;
+            background-color:#8b8b8b;
+            border:2px solid #fff;
+            border-radius: 25px;
+            box-shadow:0 0 3px 1px #999;
+            outline: none;
+        }
+        .rs-dialog-box a.close:hover{
+            background-color:#444;
+        }
+        .rs-dialog-header{
+            padding: 20px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .rs-dialog-header h3{
+            font-size: 18px;
+        }
+        .rs-dialog-body{
+            padding: 20px;
+            line-height: 1.4
+        }
+        .rs-dialog-body p{
+            margin-bottom:10px;
+        }
+        .rs-dialog-footer{
+            padding: 20px;
+            border-top:1px solid #e5e5e5;
+            overflow: hidden;
+        }
+        @media (max-width: 767px) {
+            .rs-dialog .rs-dialog-box {
+                width: auto;
+                margin: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="rs-dialog" id="myModal">
+    <div class="rs-dialog-box">
+        <a class="close" href="#">×</a>
+        <div class="rs-dialog-header">
+            <h3>标题</h3>
+        </div>
+        <div class="rs-dialog-body">
+            <p>内容</p>
+        </div>
+        <div class="rs-dialog-footer">
+            <input type="button" class="close" value="Close" style="float:right"/>
+        </div>
+    </div>
+</div>
+<script th:src="@{/jquery/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<script>
+    $(document).ready(function(){
+        $('body').append('<div class="rs-overlay" />');
+        $("a[rel='rs-dialog']").each(function(){
+            var trigger = $(this);
+            var rs_dialog = $('#' + trigger.data('target'));
+            var rs_box = rs_dialog.find('.rs-dialog-box');
+            var rs_close = rs_dialog.find('.close');
+            var rs_overlay = $('.rs-overlay');
+            if( !rs_dialog.length ) return true;
+// Open dialog
+            trigger.click(function(){
+//Get the scrollbar width and avoid content being pushed
+                var w1 = $(window).width();
+                $('html').addClass('dialog-open');
+                var w2 = $(window).width();
+                c = w2-w1 + parseFloat($('body').css('padding-right'));
+                if( c > 0 ) $('body').css('padding-right', c + 'px' );
+                rs_overlay.fadeIn('fast');
+                rs_dialog.show( 'fast', function(){
+                    rs_dialog.addClass('in');
+                });
+                return false;
+            });
+// Close dialog when clicking on the close button
+            rs_close.click(function(e){
+                rs_dialog.removeClass('in').delay(150).queue(function(){
+                    rs_dialog.hide().dequeue();
+                    rs_overlay.fadeOut('slow');
+                    $('html').removeClass('dialog-open');
+                    $('body').css('padding-right', '');
+                });
+                return false;
+            });
+// Close dialog when clicking outside the dialog
+            rs_dialog.click(function(e){
+                rs_close.trigger('click');
+            });
+            rs_box.click(function(e){
+                e.stopPropagation();
+            });
+        });
+    });
+
+
+</script>
+</body>
+</html>

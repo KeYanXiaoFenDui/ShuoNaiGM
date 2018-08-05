@@ -196,10 +196,10 @@ public class ShangXianUtil {
      * 根据表Dll(对象信息)获取:表名,,表字段,,表字段类型,,字段注释,,实体对象字段,,实体对象类型,,类名
      * @return
      */
-    private static Map<String,Object> getTableMsg(String inPath){
+    public static Map<String,Object> getTableMsg(String inPath){
         List<String> s = readTxtLines(inPath);
         StringBuffer sb = new StringBuffer();
-        String domainName = "",tableName = "",comment;
+        String domainName = "",tableName = "",tableNameCN = "",comment;
         List<Map> list = new ArrayList<Map>();
         for (String ss : s) {
             if (ss.indexOf("CREATE TABLE") != -1){
@@ -224,12 +224,15 @@ public class ShangXianUtil {
                     String domainType = sqlTypeToDomainType(sqlType);
                     object.put("sqlType",sqlType);
                     object.put("domainType",domainType);
-                    if(ss.indexOf("COMMENT") != -1){
-                        comment = ss.substring(ss.indexOf("'")+1,ss.lastIndexOf("'"));
+                    if(ss.indexOf("COMMENT '") != -1){
+                        comment = ss.substring(ss.indexOf("COMMENT '")+9,ss.lastIndexOf("'"));
                         object.put("comment",comment);
                     }
                     list.add(object);
                 }catch(Exception e){
+                    if(ss.indexOf("COMMENT") != -1){
+                        tableNameCN = ss.substring(ss.indexOf("'")+1,ss.lastIndexOf("'"));
+                    }
                     System.out.println("无效行:"+ss);
                     continue;
                 }
@@ -238,6 +241,7 @@ public class ShangXianUtil {
         Map<String,Object> objects = new HashMap();
         objects.put("tableName",tableName);
         objects.put("domainName",domainName);
+        objects.put("tableNameCN",tableNameCN);
         objects.put("params",list);
         System.out.println("tableName:"+tableName);
         System.out.println("domainName:"+domainName);

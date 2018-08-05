@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/bootstrap/css/bootstrap-theme.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <ul th:each="a : ${articles.param_relation}">
+                <li th:text="${a.db_param_name}">
+                </li>
+                <li th:text="${a.comment}">
+                </li>
+            </ul>
+            <button class="btn" type="button">按钮</button>
+            <ul th:each="b : ${articles.table_param}">
+                <li th:text="${b.db_param_name}">
+                </li>
+                <li th:text="${b.comment}">
+                </li>
+            </ul>
+            <button class="btn" type="button" onclick="getTableDetail();">按钮</button>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/jquery/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<script>
+    function getTableDetail() {
+//        $.ajax({ url: "test.html", context: document.body, success: function(){
+            alert(1234);
+//        }});
+    }
+</script>
+</body>
+</html>

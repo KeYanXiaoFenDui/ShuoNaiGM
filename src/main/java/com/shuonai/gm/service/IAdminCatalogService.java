@@ -1,7 +1,6 @@
 package com.shuonai.gm.service;
 
 import com.shuonai.gm.domain.AdminCatalog;
-import org.springframework.stereotype.Service;
 
 
 public interface IAdminCatalogService {

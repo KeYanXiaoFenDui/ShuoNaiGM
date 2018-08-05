@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>tableList</title>
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/bootstrap/css/bootstrap-theme.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Id
+                                </th>
+                                <th>
+                                    字段中文名
+                                </th>
+                                <th>
+                                    参数类型
+                                </th>
+                                <th>
+                                    字段名
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="success" th:each="t : ${tableDetail}">
+                                    <td th:text="${t.id}">
+                                        1
+                                    </td>
+                                    <td th:text="${t.comment}">
+                                        TB - Monthly
+                                    </td>
+                                    <td th:text="${t.param_type}">
+                                        01/04/2012
+                                    </td>
+                                    <td th:text="${t.low_case_param}">
+                                        Approved
+                                    </td>
+                                    <td>
+                                        <button class="btn" type="button">按钮</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <ul th:each="t : ${tableDetail}" style="display: none;">
+                <li th:text="${t.id}">
+                </li>
+                <li th:text="${t.table_id}">
+                </li>
+                <li th:text="${t.table_name_cn}">
+                </li>
+                <li th:text="${t.table_name}">
+                </li>
+                <li th:text="${t.up_class_name}">
+                </li>
+                <li th:text="${t.low_class_name}">
+                </li>
+                <li th:text="${t.db_param_name}">
+                </li>
+                <li th:text="${t.db_param_type}">
+                </li>
+                <li th:text="${t.comment}">
+                </li>
+                <li th:text="${t.up_case_param}">
+                </li>
+                <li th:text="${t.low_case_param}">
+                </li>
+                <li th:text="${t.param_type}">
+                </li>
+                <li th:text="${t.if_main_key}">
+                </li>
+                <li th:text="${t.if_related}">
+                </li>
+                <li th:text="${t.status}">
+                </li>
+            <!--<button class="btn" type="button" th:onclick="'getTableDetail('+${tableList.tableId}+')'">按钮</button>-->
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/jquery/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<script>
+    function getTableDetail(tableId) {
+//        var ss = [[${tableList}]];
+//        alert(tableId);
+//        alert(window.location.host+"/tableParam/getAllTableParam");
+        window.location.href="http://localhost:8080/tableParam/getTableDetail?tableId="+tableId;
+//        $.ajax({
+//            url: "http://localhost:8080/tableParam/getAllTableParam",
+//            data: {
+//                fss:"sdf",
+//                ssd:"ewrwer"
+//            },
+//            success: function(){
+//                alert(1234);
+//            }});
+        }
+</script>
+</body>
+</html>

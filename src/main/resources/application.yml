@@ -4,9 +4,9 @@ spring:
     hibernate:
       ddl-auto: validate
   datasource:
-    url: jdbc:mysql://120.79.41.87:3306/gmdb?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/model
     username: root
-    password: Keyanxiaofendui007
+    password: root
     driver-class-name: com.mysql.jdbc.Driver
   thymeleaf:
     cache: false

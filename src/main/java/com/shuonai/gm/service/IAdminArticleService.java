@@ -1,7 +1,6 @@
 package com.shuonai.gm.service;
 
 import com.shuonai.gm.domain.AdminArticle;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

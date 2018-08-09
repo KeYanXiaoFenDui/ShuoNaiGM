@@ -28,9 +28,40 @@ public class ShangXianUtil {
     private static int fail = 0;
 
     public static void main(String[] args) {
-        factory("C:/Users/冼世龙/Desktop/ssss.txt","C:/Users/冼世龙/Desktop/test");
+//        factory("C:/Users/冼世龙/Desktop/ssss.txt","C:/Users/冼世龙/Desktop/test");
 //        dllTo_aAsASQL("");
 //        domainParamToSetMethod("s");
+        List<String> line = readTxtLines("D:/桌面文件/ssss.txt");
+        int flag = 0;//0找/**  1找中文方法名  2找英文方法名
+        String system = "/api/business";
+        String model = "";
+        String method = "";
+        for(String l : line){
+            if(flag == 0){
+                int i = l.indexOf("/**");
+                if(i != -1){
+                    flag = 1;
+                    continue;
+                }
+            }
+            if(flag == 1){
+                method = l.trim().substring(2);
+//                method = l.trim();
+//                System.out.println("method:"+method);
+                flag = 2;
+                continue;
+            }
+            if(flag == 2){
+                int i = l.indexOf("@RequestMapping");
+                if(i != -1){
+                    l = l.substring(l.indexOf("\"/")+1,l.lastIndexOf("\""));
+                    if(model.equals("")){model = l.trim();flag = 0;System.out.println("model:"+l);continue;}
+                    System.out.println(system+model+l.trim()+"\t"+method);
+                    flag = 0;
+                    continue;
+                }
+            }
+        }
     }
 
     /**

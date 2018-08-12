@@ -11,6 +11,7 @@
 <div class="container">
     <div class="row clearfix">
         <div class="col-md-12 column">
+            <div class="row">
             <nav class="navbar navbar-default navbar-inverse" role="navigation">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">Destiny</a>
@@ -81,64 +82,67 @@
                 </div>
 
             </nav>
-        </div>
-    </div>
-
-    <div class="row clearfix">
-        <div class="col-md-12 column">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>
-                        Id
-                    </th>
-                    <th>
-                        表中文名
-                    </th>
-                    <th>
-                        数据库表名
-                    </th>
-                    <th>
-                        操作
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="success" th:each="t : ${tableList}">
-                    <td th:text="${t.tableId}">
-                        1
-                    </td>
-                    <td th:text="${t.tableNameCN}">
-                        TB - Monthly
-                    </td>
-                    <td th:text="${t.tableName}">
-                        01/04/2012
-                    </td>
-                    <td>
-                        <button class="btn" type="button" th:onclick="'getTableDetail('+${t.tableId}+')'">查看表字段</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            </div>
+            <div class="row clearfix">
+                <div class="col-md-8 column">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>
+                                Id
+                            </th>
+                            <th>
+                                表中文名
+                            </th>
+                            <th>
+                                数据库表名
+                            </th>
+                            <th>
+                                操作
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="success" th:each="t : ${tableList}">
+                            <td th:text="${t.tableId}">
+                                1
+                            </td>
+                            <td th:text="${t.tableNameCN}">
+                                TB - Monthly
+                            </td>
+                            <td th:text="${t.tableName}">
+                                01/04/2012
+                            </td>
+                            <td>
+                                <button class="btn" type="button" th:onclick="'getTableDetail('+${t.tableId}+')'">查看表字段</button>
+                                <button class="btn" type="button">选择</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-4 column">
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-default" type="button" th:onclick="'selectMethod(\'select\')'"><em class="glyphicon glyphicon-align-left"></em> 查</button>
+                        <button class="btn btn-default" type="button" th:onclick="'selectMethod(\'update\')'"><em class="glyphicon glyphicon-align-center"></em> 改</button>
+                        <button class="btn btn-default" type="button" th:onclick="'selectMethod(\'insert\')'"><em class="glyphicon glyphicon-align-right"></em> 增</button>
+                        <button class="btn btn-default" type="button" th:onclick="'selectMethod(\'delete\')'"><em class="glyphicon glyphicon-align-justify"></em> 删</button>
+                    </div>
+                    <div>
+                        <input type="hidden" value="sdf"/>
+                        <span style="line-height: 30px;">方法类型：</span>
+                        <span class="label label-primary" style="line-height: 30px;" id="method">select</span>
+                    </div>
+                    <div>
+                        <input type="hidden" value="sdf"/>
+                        <span style="line-height: 30px;">相关表：</span>
+                        <span class="label label-success" style="line-height: 30px;">文章表</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-<!--<div class="container-fluid">-->
-    <!--<div class="row-fluid">-->
-        <!--<div class="span12">-->
-            <!--<ul th:each="tableList : ${tableList}">-->
-                <!--<li th:text="${tableList.tableId}">-->
-                <!--</li>-->
-                <!--<li th:text="${tableList.tableNameCN}">-->
-                <!--</li>-->
-                <!--<li th:text="${tableList.tableName}">-->
-                <!--</li>-->
-                <!--<button class="btn" type="button" th:onclick="'getTableDetail('+${tableList.tableId}+')'">按钮</button>-->
-            <!--</ul>-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</div>-->
 
 <script th:src="@{/jquery/jquery-3.2.1.min.js}"></script>
 <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
@@ -158,6 +162,10 @@
 //                alert(1234);
 //            }});
         }
+    function selectMethod(method) {
+//        alert(method);
+        $("#method").text(method);
+    }
 </script>
 </body>
 </html>

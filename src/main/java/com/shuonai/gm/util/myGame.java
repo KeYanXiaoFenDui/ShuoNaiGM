@@ -5,17 +5,43 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class myGame {
+public  class myGame {
     public static void main(String[] args){
-//        int length = 10;
-//        int[][] x = {{5},{1,1,2,1},{3,1,4},{2,7},{7,1},{1,2,1},{3,1,2},{1,3,1},{4,2,1},{1,3,1}};
-//        int[][] y = {{3,4},{1,3,1,2},{1,1,3,1},{2,3,3},{1,3,2,1},{2,2,3},{6,1},{3,1},{2,3},{4}};
-        int length = 5;
-        int[][] x = {{3},{3},{2},{2},{5}};
-        int[][] y = {{4},{5},{2,1},{1,1},{1}};
-        mainMethod(length,x,y);
+        int length = 20;
+//        String strX = "3/1,9/6,7/4,4,2,1/6,4,1/1,1,9/6,3/2,1,5/2,9/2,1,2,5/12/1,1,4,1/9,2,1/15/1,3";
+//        String strY = "1,2/3,1,4/5,3,2/3,2,2,2/1,3,1,4/3,5,2/6,1,1,2/1,1,6,2/15/3,2,2,2,2/15/13/2,2,3,1/2,1,2,1/5,5";
+//        String strX = "3,2,2/3,2,3/1,11/1,1,13/3,1,13/3,11,2/1,3,6,1/3,3,5,1/3,4,3,7/16/17/9,5,1/2,3,4,1/2,13,2/16/18/6,7/3,2,6/4,2,4/4,1";
+//        String strY = "1,2,1,1,1,2/1,1,1,2,5/2,2,2,2,6/1,3,2,7/5,10/9/15/12,3,2/8,3,3,2/4,4,3/4,4,5/4,3,6/5,3,6/18/19/18/11,3/3,5,3/3,6/6";
+        String strX = "2,4/4,6/7,1/1,9/2,6,2/1,6/2,6,3/1,5/3,5,2/1,1,10/1,2,7,2/15,2/11/15,3/1,2,1,2,1/1,2,4/3,2/1,3/2,1/1,3";
+        String strY = "2,1,1,1,1,1,1/5,1,1,4/4,4/1,1/3/7/6/3/1,3/2,4/3,8/13/12/12/15/6,2,1/6,1,2,1/2,1,1,2,3,1,1/2,2,1,4,1,2,1/5,1,2,1,2,1,2";
+        mainMethod(length,dynamicArr(strX),dynamicArr(strY));
+
+//        int length = 5;
+//        int[][] x = {{3},{3},{2},{2},{5}};
+//        int[][] y = {{4},{5},{2,1},{1,1},{1}};
+//        mainMethod(length,x,y);
     }
-    public static void mainMethod(int length,int[][] x,int[][]y){
+
+    /**
+     * 根据1,2,3/2,3/3/1,1,2/3,2这种格式的字符串生成动态二维数组
+     * @param str
+     * @return
+     */
+    public static int[][] dynamicArr(String str){
+//        String str = "2,4/4,6/7,1/1,9/2,6,2/1,6/2,6,3/1,5/3,5,2/1,1,10/1,2,7,2/15,2/11/15,3/1,2,1,2,1/1,2,4/3,2/1,3/2,1/1,3";
+        String[] arr = str.split("/");
+        int[][] result = new int[arr.length][];
+        for (int i = 0;i<arr.length;i++){
+            String[] a = arr[i].split(",");
+            int[] temp = new int[a.length];
+            for(int j = 0;j<a.length;j++){
+                temp[j] = Integer.parseInt(a[j]);
+            }
+            result[i] = temp;
+        }
+        return result;
+    }
+    public static char[][] mainMethod(int length,int[][] x,int[][]y){
         char[][] zuoBiao = new char[length][length];
         for (int i = 0;i<length;i++){
             for (int j = 0;j<length;j++){
@@ -54,8 +80,24 @@ public class myGame {
             strs = mate(getRowCol(zuoBiao,"x",i),strs);
             zuoBiao = setZuoBiao(zuoBiao,compare(strs),"x",i);
         }
+        for(int i = 0;i<y.length;i++){
+            List<String> strs = math(y[i],length);
+            strs = mate(getRowCol(zuoBiao,"y",i),strs);
+            zuoBiao = setZuoBiao(zuoBiao,compare(strs),"y",i);
+        }
+        for(int i = 0;i<x.length;i++){
+            List<String> strs = math(x[i],length);
+            strs = mate(getRowCol(zuoBiao,"x",i),strs);
+            zuoBiao = setZuoBiao(zuoBiao,compare(strs),"x",i);
+        }
+        for(int i = 0;i<y.length;i++){
+            List<String> strs = math(y[i],length);
+            strs = mate(getRowCol(zuoBiao,"y",i),strs);
+            zuoBiao = setZuoBiao(zuoBiao,compare(strs),"y",i);
+        }
 //        System.out.println(getRowCol(zuoBiao,"y",0));
-        printResult(zuoBiao);
+//        printResult2(zuoBiao);
+        return zuoBiao;
 //        strs = mate("? * ? ? * * * * ? ? ",strs);
 //
 //        System.out.println(compare(strs));
@@ -228,7 +270,24 @@ public class myGame {
             System.out.println();
         }
     }
-
+    public static String printResult2(char[][] xy){
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0;i<xy.length;i++){
+            for (int j = 0;j<xy[i].length;j++){
+                if(String.valueOf(xy[i][j]).equals("-")){
+                    System.out.print(" ");
+                    sb.append(" ");
+                }else{
+                    System.out.print("█");
+                    sb.append("█");
+                }
+//                System.out.print(String.valueOf(xy[i][j]).replaceAll("\\*","■"));
+            }
+            System.out.println();
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
     class XNum{
         private int x;
         private int length;

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>tableList</title>
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/bootstrap/css/bootstrap-theme.min.css}" rel="stylesheet"/>
+    <style>
+        .bloB{
+            width: 30px;
+            height: 30px;
+            padding: 0px;
+            margin: 0px;
+            background-color: #0e90d2;
+            display: inline-block;
+        }
+        .bloR{
+            width: 30px;
+            height: 30px;
+            padding: 0px;
+            margin: 0px;
+            background-color:#b94a48;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <span class="bloB" th:each="r : ${result}">1</span><br/>
+            <span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><br/>
+            <span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><br/>
+            <span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><br/>
+            <span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><br/>
+            <span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><br/>
+            <span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><br/>
+            <span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><br/>
+            <span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><br/>
+            <span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><br/>
+            <span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><span class="bloR">2</span><span class="bloB">1</span><br/>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/jquery/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<script>
+
+</script>
+</body>
+</html>

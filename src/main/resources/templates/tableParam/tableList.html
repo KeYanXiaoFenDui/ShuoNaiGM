@@ -84,7 +84,8 @@
             </nav>
             </div>
             <div class="row clearfix">
-                <div class="col-md-8 column">
+                <!-- 左半列表start -->
+                <div class="col-md-8 column" id="left-list">
                     <table class="table table-hover">
                         <thead>
                         <tr>
@@ -114,13 +115,14 @@
                                 01/04/2012
                             </td>
                             <td>
-                                <button class="btn" type="button" th:onclick="'getTableDetail('+${t.tableId}+')'">查看表字段</button>
+                                <button class="btn" type="button" th:onclick="'getTableDetail('+${t.tableId}+')'">看字段</button>
                                 <button class="btn" type="button">选择</button>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
+                <!-- 左半列表end -->
                 <div class="col-md-4 column">
                     <div class="btn-group btn-group-sm">
                         <button class="btn btn-default" type="button" th:onclick="'selectMethod(\'select\')'"><em class="glyphicon glyphicon-align-left"></em> 查</button>
@@ -151,17 +153,55 @@
 //        var ss = [[${tableList}]];
 //        alert(tableId);
 //        alert(window.location.host+"/tableParam/getAllTableParam");
-        window.location.href="http://localhost:8080/tableParam/getTableDetail?tableId="+tableId;
-//        $.ajax({
-//            url: "http://localhost:8080/tableParam/getAllTableParam",
-//            data: {
-//                fss:"sdf",
-//                ssd:"ewrwer"
-//            },
-//            success: function(){
-//                alert(1234);
-//            }});
-        }
+//        window.location.href="http://localhost:8080/tableParam/getTableDetail?tableId="+tableId;
+        $.ajax({
+            url: "http://localhost:8080/tableParam/getTableDetailJson",
+            data: {
+                tableId:tableId
+            },
+            success: function(result){
+                var data = result.tableDetailJson;
+                var buffer = "";
+                var method = "getTableList()";
+                buffer += '<table class="table table-hover"><thead><tr><th>Id</th><th>字段中文名</th><th>参数类型</th><th>字段名</th><th>操作</th></tr></thead><tbody>';
+                for(var i = 0; data.length > i;i++){
+                    buffer += '<tr class="success"><td>'+data[i].id+'</td>' +
+                        '<td>'+data[i].comment+'</td>' +
+                        '<td>'+data[i].param_type+'</td>' +
+                        '<td>'+data[i].low_case_param+'</td>' +
+                        '<td><button class="btn" type="button" th:onclick="&apos;getTableList()&apos;">看表</button><button class="btn" type="button">选择</button></td></tr>';
+
+                }
+                buffer += '</tbody></table>';
+                $("#left-list").html(buffer);
+            }
+        });
+    }
+
+    function getTableList() {
+        var oBuffer = new StringBuffer();
+        $.ajax({
+            url: "http://localhost:8080/tableParam/getTableListJson",
+            success: function(result){
+                var data = result.tableListJson;
+                var buffer = "";
+                var tableId = 1;
+                buffer += '<table class="table table-hover"><thead><tr><th>Id</th><th>表中文名</th><th>数据库表名</th><th>操作</th></tr></thead><tbody>';
+                for(var i = 0; data.length > i;i++){
+                    tableId = data[i].tableId;
+                    buffer += '<tr class="success"><td>'+data[i].tableId+'</td>';
+                    buffer += '<td>'+data[i].tableNameCN+'</td>';
+                    buffer += '<td>'+data[i].tableName+'</td>';
+                    buffer += '<td><button class="btn" type="button" th:onclick="&apos;getTableDetail(';
+                    buffer += tableId;
+                    buffer += ')&apos;">看字段</button><button class="btn" type="button">选择</button></td></tr>';
+                }
+                buffer += '</tbody></table>';
+                $("#left-list").html(oBuffer);
+            }
+        });
+    }
+
     function selectMethod(method) {
 //        alert(method);
         $("#method").text(method);

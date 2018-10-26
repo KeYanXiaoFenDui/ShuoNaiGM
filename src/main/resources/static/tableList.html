@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>tableList</title>
+    <link href="http://localhost:8080/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="http://localhost:8080/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet"/>
+    <link href="http://localhost:8080/jquery/css/jquery.tagsinput.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="row">
+            <nav class="navbar navbar-default navbar-inverse" role="navigation">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">Destiny</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="/tableParam/getTableList">tableList</a>
+                        </li>
+                        <li>
+                            <a href="#">Link</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#">Action</a>
+                                </li>
+                                <li>
+                                    <a href="#">Another action</a>
+                                </li>
+                                <li>
+                                    <a href="#">Something else here</a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="#">Separated link</a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="#">One more separated link</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" />
+                        </div> <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#">Link</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#">Action</a>
+                                </li>
+                                <li>
+                                    <a href="#">Another action</a>
+                                </li>
+                                <li>
+                                    <a href="#">Something else here</a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="#">Separated link</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+            </nav>
+            </div>
+            <div class="row clearfix">
+
+                <!-- 左半列表start -->
+                <div class="col-md-8 column">
+                    <div class="tabbable" id="tabs-700952">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#panel-449890" data-toggle="tab">表和字段</a>
+                            </li>
+                            <li>
+                                <a href="#panel-828541" onclick="sql()" data-toggle="tab">SQL</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="panel-449890">
+                                <p>
+                                    <div id="left-list"></div>
+                                </p>
+                            </div>
+                            <div class="tab-pane" id="panel-828541">
+                                <p>
+                                    <div id="left-list-sql">
+                                        <span class="label label-default">标签</span>
+                                        <span class="label label-primary">标签</span>
+                                        <span class="label label-success">标签</span>
+                                        <span class="label label-info">标签</span>
+                                        <span class="label label-warning">标签</span>
+                                        <span class="label label-danger">标签</span>
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="col-md-8 column" id="left-list"></div>-->
+                <!-- 左半列表end -->
+                <div class="col-md-4 column">
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-default" type="button" onclick="selectMethod('select')"><em class="glyphicon glyphicon-align-left"></em> 查</button>
+                        <button class="btn btn-default" type="button" onclick="selectMethod('update')"><em class="glyphicon glyphicon-align-center"></em> 改</button>
+                        <button class="btn btn-default" type="button" onclick="selectMethod('insert')"><em class="glyphicon glyphicon-align-right"></em> 增</button>
+                        <button class="btn btn-default" type="button" onclick="selectMethod('delete')"><em class="glyphicon glyphicon-align-justify"></em> 删</button>
+                    </div>
+                    <div>
+                        <input type="hidden" value="sdf"/>
+                        <span style="line-height: 30px;">方法类型：</span>
+                        <span class="label label-primary" style="line-height: 30px;" id="method">select</span>
+                    </div>
+                    <div>
+                        <input type="hidden" value="sdf"/>
+                        <span style="line-height: 30px;">相关表：</span>
+                        <input name="tags" id="tableTags" value="" />
+                    </div>
+                    <div>
+                        <input type="hidden" id="nowTableId" value=""/>
+                        <input type="hidden" id="nowTableName" value=""/>
+                        <span style="line-height: 30px;">查询字段：</span>
+                        <input name="tags" id="searchParamTags" value="" />
+                    </div>
+                    <div>
+                        <input type="hidden" value="sdf"/>
+                        <span style="line-height: 30px;">条件字段：</span>
+                        <input name="tags" id="whereParamTags" value="1=1" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="http://localhost:8080/jquery/jquery-3.2.1.min.js"></script>
+<script src="http://localhost:8080/bootstrap/js/bootstrap.min.js"></script>
+<script src="http://localhost:8080/jquery/jquery.tagsinput.js"></script>
+<script>
+
+    window.onload = function(){
+        getTableList();
+        $('#tableTags').tagsInput({
+            width:'auto',
+            onAddTag:function(tag){
+                getTableList();
+            },
+            onRemoveTag:function(tag){
+                //删除表的时候,删除对应的字段
+                tag = tag.substring(tag.indexOf("{"),tag.indexOf("}")+1);
+                var params = $('#searchParamTags').val();
+                var wparams = $('#whereParamTags').val();
+                var tags = params.split(',');
+                var wtags = wparams.split(',');
+                for(var i = 0;tags.length>i;i++){
+                    if(tags[i].indexOf(tag) != -1){
+                        $('#searchParamTags').removeTag(tags[i]);
+                    }
+                }
+                for(var i = 0;wtags.length>i;i++){
+                    if(wtags[i].indexOf(tag) != -1){
+                        $('#whereParamTags').removeTag(wtags[i]);
+                    }
+                }
+                getTableList();
+            }
+        });
+        $('#searchParamTags').tagsInput({
+            width:'auto',
+            onAddTag:function(tag){
+                tag = tag.replace("{","");
+                tag = tag.replace("}","");
+                $("#"+tag).removeClass("btn-info");
+                $("#"+tag).addClass("btn-danger");
+                $("#"+tag).text("删除");
+            },
+            onRemoveTag:function(tag){
+                tag = tag.replace("{","");
+                tag = tag.replace("}","");
+                $("#"+tag).removeClass("btn-danger");
+                $("#"+tag).addClass("btn-info");
+                $("#"+tag).text("选择");
+                console.log("asdfasdfsdf{89}sldf{2}{sd}aadd{3}".replace(/\{[^\}]+\}/g,""));
+            }
+        });
+        $('#whereParamTags').tagsInput({
+            width:'auto',
+            onAddTag:function(tag){
+                tag = tag.replace("{","");
+                tag = tag.replace("}","");
+                $("#w"+tag).removeClass("btn-info");
+                $("#w"+tag).addClass("btn-danger");
+                $("#w"+tag).text("删除");
+            },
+            onRemoveTag:function(tag){
+                tag = tag.replace("{","");
+                tag = tag.replace("}","");
+                $("#w"+tag).removeClass("btn-danger");
+                $("#w"+tag).addClass("btn-info");
+                $("#w"+tag).text("选择");
+            }
+        });
+    }
+
+    function getTableDetail(tableId,tableName) {
+//        var ss = [[${tableList}]];
+//        alert(tableId);
+//        alert(window.location.host+"/tableParam/getAllTableParam");
+//        window.location.href="http://localhost:8080/tableParam/getTableDetail?tableId="+tableId;
+        $("#nowTableId").val(tableId);
+        $("#nowTableName").val(tableName);
+        var paramStr = $('#searchParamTags').val();
+        var wParamStr = $('#whereParamTags').val();
+        $.ajax({
+            url: "http://localhost:8080/tableParam/getTableDetailJson",
+            data: {
+                tableId:tableId
+            },
+            success: function(result){
+                var data = result.tableDetailJson;
+                var buffer = "";
+                var method = "getTableList()";
+                buffer += '<table class="table table-hover"><thead><tr><th>Id</th><th>字段中文名</th><th>参数类型</th><th>字段名</th><th>操作</th></tr></thead><tbody>';
+                for(var i = 0; data.length > i;i++){
+                    var clas = "btn btn-default btn-info";
+                    var wclas = "btn btn-default btn-info";
+                    var text = "选择";
+                    var wtext = "选择";
+                    if(paramStr.indexOf(data[i].low_case_param+'{'+tableId+'}') != -1){clas = "btn btn-default btn-danger";text = "删除";}
+                    if(wParamStr.indexOf(data[i].low_case_param+'{'+tableId+'}') != -1){wclas = "btn btn-default btn-danger";wtext = "删除";}
+                    buffer += '<tr class="success"><td>'+data[i].id+'</td>' +
+                        '<td>'+data[i].comment+'</td>' +
+                        '<td>'+data[i].param_type+'</td>' +
+                        '<td>'+data[i].low_case_param+'</td>' +
+                        '<td><button class="btn" type="button" onclick="getTableList()">看表</button><button id="'+data[i].low_case_param+tableId+'" class="'+clas+'" type="button" onclick="addSearchParamTags('+tableId+',&apos;';
+                    buffer += '{'+tableId+'}';
+                    buffer += '&apos;,&apos;';
+                    buffer += data[i].low_case_param;
+                    buffer += '&apos;,&apos;';
+                    buffer += '['+data[i].id+']';
+                    buffer += '&apos;)">'+text+'</button><button id="w'+data[i].low_case_param+tableId+'" class="'+wclas+'" type="button" onclick="addWhereParamTags('+tableId+',&apos;';
+                    buffer += '{'+tableId+'}';
+                    buffer += '&apos;,&apos;';
+                    buffer += data[i].low_case_param;
+                    buffer += '&apos;,&apos;';
+                    buffer += '['+data[i].id+']';
+                    buffer += '&apos;)">'+wtext+'</button></td></tr>';
+
+                }
+                buffer += '</tbody></table>';
+                $("#left-list").html(buffer);
+            }
+        });
+    }
+    function addTableTags(tableId,table){
+        if (!$('#tableTags').tagExist(table+tableId)) {
+            $('#tableTags').addTag(table+tableId);
+        }else{
+            $('#tableTags').removeTag(table+tableId);
+        }
+    }
+    function addSearchParamTags(id,tableId,param,paramHiden){
+        if (!$('#tableTags').tagExist($("#nowTableName").val()+tableId)) {//添加字段的时候,判断是否添加了当前表的tag
+            $('#tableTags').addTag($("#nowTableName").val()+tableId);
+        }
+        if (!$('#searchParamTags').tagExist(param+tableId)) {
+            $('#searchParamTags').addTag(param+tableId);
+            $("#"+param+id).removeClass("btn-info");
+            $("#"+param+id).addClass("btn-danger");
+            $("#"+param+id).text("删除");
+
+        }else{
+            $('#searchParamTags').removeTag(param+tableId);
+            $("#"+param+id).removeClass("btn-danger");
+            $("#"+param+id).addClass("btn-info");
+            $("#"+param+id).text("选择");
+        }
+    }
+    function addWhereParamTags(id,tableId,param,paramHiden){
+        if (!$('#tableTags').tagExist($("#nowTableName").val()+tableId)) {//添加字段的时候,判断是否添加了当前表的tag
+            $('#tableTags').addTag($("#nowTableName").val()+tableId);
+        }
+        if (!$('#whereParamTags').tagExist(param+tableId)) {
+            $('#whereParamTags').addTag(param+tableId);
+            $("#w"+param+id).removeClass("btn-info");
+            $("#w"+param+id).addClass("btn-danger");
+            $("#w"+param+id).text("删除");
+
+        }else{
+            $('#whereParamTags').removeTag(param+tableId);
+            $("#w"+param+id).removeClass("btn-danger");
+            $("#w"+param+id).addClass("btn-info");
+            $("#w"+param+id).text("选择");
+        }
+    }
+
+    function getTableList() {
+        var tableStr = $('#tableTags').val();
+        $.ajax({
+            url: "http://localhost:8080/tableParam/getTableListJson",
+            data:{
+                tables: $("#tableTags").val()
+            },
+            success: function(result){
+                var data = result.tableListJson;
+                var buffer = "";
+                buffer += '<table class="table table-hover"><thead><tr><th>Id</th><th>表中文名</th><th>数据库表名</th><th>操作</th></tr></thead><tbody>';
+                for(var i = 0; data.length > i;i++){
+                    var clas = "btn btn-default btn-info";
+                    var text = "选择";
+                    if(tableStr.indexOf(data[i].tableName+'{'+data[i].tableId+'}') != -1){clas = "btn btn-default btn-danger";text = "删除";}
+                    buffer += '<tr class="success"><td>'+data[i].tableId+'</td>';
+                    buffer += '<td>'+data[i].tableNameCN+'</td>';
+                    buffer += '<td>'+data[i].tableName+'</td>';
+                    buffer += '<td><button class="btn" type="button" onclick="getTableDetail(';
+                    buffer += data[i].tableId;
+                    buffer += ',&apos;';
+                    buffer += data[i].tableName;
+                    buffer += '&apos;)">看字段</button><button id="'+data[i].tableName+'{'+data[i].tableId+'}'+'" value="" class="'+clas+'" type="button" onclick="addTableTags(&apos;';
+                    buffer += '{'+data[i].tableId+'}';
+                    buffer += '&apos;,&apos;';
+                    buffer += data[i].tableName;
+                    buffer += '&apos;)">'+text+'</button></td></tr>';
+                }
+                buffer += '</tbody></table>';
+                $("#left-list").html(buffer);
+            }
+        });
+    }
+
+    function selectMethod(method) {
+//        alert(method);
+        $("#method").text(method);
+    }
+    function sql(){
+        $("#tableTags").val();
+        $("#searchParamTags").val();
+        $("#whereParamTags").val();
+        $("#left-list-sql").text($("#tableTags").val()+$("#searchParamTags").val()+$("#whereParamTags").val());
+    }
+</script>
+</body>
+</html>

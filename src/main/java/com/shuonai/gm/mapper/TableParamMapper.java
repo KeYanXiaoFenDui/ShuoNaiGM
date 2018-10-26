@@ -1,6 +1,7 @@
 package com.shuonai.gm.mapper;
 
 import com.shuonai.gm.domain.TableParam;
+import com.shuonai.gm.mapper.sqlProvide.TableParamSQLProvider;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -33,6 +34,9 @@ public interface TableParamMapper {
 
     @Select("select t.table_id as tableId,t.table_name_cn as tableNameCN,t.table_name as tableName from table_param t group by t.table_id")
     public List<Map> getTableList();
+
+    @SelectProvider(type = TableParamSQLProvider.class,method = "getTableListByNames")
+    public List<Map> getTableListByNames(String tables);
 
     @Select("select * from table_param t where t.table_id = #{tableId}")
     public List<Map> getParamsByTId(int tableId);

@@ -1,0 +1,99 @@
+首先，引用下面两个文件
+
+<script src="jquery.tagsinput.js"></script>
+<link rel="stylesheet" type="text/css" href="jquery.tagsinput.css" />
+
+在你的表单里创建一个包含tags列表的input输入框，你可以在value里设置默认或目前有的tags，并用逗号隔开。
+
+
+<input name="tags" id="tags" value="foo,bar,baz" />
+
+然后，简单地给任何一个输入标签调用tagsInput()函数，它便会被当作一个tags列表处理
+
+
+$('#tags').tagsInput();
+
+如果你想使用jQuery.autocomalete（自动完成插件）配合使用，那么在函数里增加一个带autocomplete url的参数。
+
+
+$('#tags').tagsInput({
+  autocomplete_url:'http://myserver.com/api/autocomplete'
+});
+
+如果你使用了bassistance.de这个网站上的jQuery.autocomplete插件，还可以增加额外的参数来加强autocomplete插件，就像下面描述的这样。
+
+
+$('#tags').tagsInput({
+  autocomplete_url:'http://myserver.com/api/autocomplete',
+  autocomplete:{selectFirst:true,width:'100px',autoFill:true}
+});
+
+PS：需要注意的是，demo里默认用的是jquery ui autocomplete，如果你想要测试jquery.autocomplete，要把头部被注释掉的引用文件去掉注释，并将$('#tags').tagsInput({})中autocomplete_url的地址改为相应的jquery.autocomplete的文件。具体看页面上有说明。
+
+你还可以使用addTag() and removeTag()函数增加和删除掉标签，如以下：
+
+
+$('#tags').addTag('foo');
+$('#tags').removeTag('bar');
+
+你还可以用imporTags()方法导进一组tag列表，需要注意的是这样会将value里设置的默认tag替换掉
+
+
+$('#tags').importTags('foo,bar,baz');
+
+所以如果importTags()里不带值的话，就是重置input里的标签值（注意引号要保留，可以理解为给它传空值。）
+
+
+$('#tags').importTags('');
+
+可以使用tagExist()判断一个标签是否存在：
+
+
+if ($('#tags').tagExist('foo')) { ... }
+
+如果想要在增加或移除掉标签的时候增加额外的功能或触发其它动作，你可以通过onAddTag和onRemoveTag这两个参数里指定回调函。这两个函数都返回了一个标签值作为参数(原文： Both functions should accept a single tag as the parameter.)
+
+
+$('#tags_1').tagsInput({
+                width:'auto',
+                onAddTag:function(tag){
+                    console.log('增加了'+tag)
+                },
+                onRemoveTag:function(tag){
+                    console.log('删除了'+tag)
+                }
+            });
+
+如果你想禁止增加标签，或者你想提供其它交互方式增加标签，可以增加一个值为false的interactive参数，这样就禁止了增加标签，而其它的功能和呈现都跟原来一样。
+
+
+$('#tags_1').tagsInput({
+                width:'auto',
+                onRemoveTag:function(tag){
+                    console.log('remover'+'"'+tag+'"')
+                },
+                interactive:false
+            });
+
+如果你想要在每次增加/删除一个标签的时候调用一个函数，可以增加onChange的参数，并设置回调函数
+
+默认情况下，如果鼠标位于一个标签后面，按退格键会删除掉那个标签。如果你想禁止这个，设置removeWithBackspace参数为false即可。
+
+参数：
+
+
+$(selector).tagsInput({
+   'autocomplete_url': url_to_autocomplete_api, //自动完成插件的文件地址，demo里有说明
+   'autocomplete': { option: value, option: value}, //自动完成插件的参数，demo有说明。（提供个jquery.autocomplete的：http://bassistance.de/jquery-plugins/jquery-plugin-autocomplete/）
+   'height':'100px', //设置高度
+   'width':'300px',  //设置宽度
+   'interactive':true, //是否允许添加标签，false为阻止
+   'defaultText':'add a tag', //默认文字
+   'onAddTag':callback_function, //增加标签的回调函数
+   'onRemoveTag':callback_function, //删除标签的回调函数
+   'onChange' : callback_function, //改变一个标签时的回调函数
+   'removeWithBackspace' : true, //是否允许使用退格键删除前面的标签，false为阻止
+   'minChars' : 0, //每个标签的小最字符
+   'maxChars' : 0 //每个标签的最大字符，如果不设置或者为0，就是无限大
+   'placeholderColor' : '#666666' //设置defaultText的颜色
+});

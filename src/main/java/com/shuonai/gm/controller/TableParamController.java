@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by dekit on 2017/12/24.
@@ -35,7 +37,8 @@ public class TableParamController {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         int status = 0;
         String message = "";
-        Map<String,Object> object = ShangXianUtil.getTableMsg("C:/Users/冼世龙/Desktop/ssss.txt");
+        Map<String,Object> object = ShangXianUtil.getTableMsg("D:/桌面文件/ssss.txt");
+//        Map<String,Object> object = ShangXianUtil.getTableMsg("C:/Users/冼世龙/Desktop/ssss.txt");
         String tableName = (String)object.get("tableName");
         String domainName = (String)object.get("domainName");
         String tableNameCN = (String)object.get("tableNameCN");
@@ -90,6 +93,33 @@ public class TableParamController {
         m.addAttribute("tableList",tableList);
         return  "tableParam/tableList";
     }
+    @RequestMapping(value = "/getTableListJson")
+    @ResponseBody
+    public Map getTableListJson(HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        int status = 0;
+        String message = "";
+        String tables = getStr(request.getParameter("tables"),"");
+        List<Map> tableList = new ArrayList<Map>();
+        if(tables.equals("")){
+            tableList = tableParamService.getTableList();
+        }else{
+            String regEx = "\\{.*?\\}";
+            Pattern p = Pattern.compile(regEx);
+            Matcher m = p.matcher(tables);
+            tables = m.replaceAll("").trim();
+            String[] table = tables.split(",");
+            StringBuffer sb = new StringBuffer();
+            for (String s : table){
+                sb.append("'" + s + "',");
+            }
+            sb.deleteCharAt(sb.length()-1);
+            System.out.println("tables:"+sb.toString());
+            tableList = tableParamService.getTableListByNames(sb.toString());
+        }
+        resultMap.put("tableListJson",tableList);
+        return  resultMap;
+    }
 
     /**
      * 获取表详情
@@ -110,6 +140,21 @@ public class TableParamController {
         return  "tableParam/tableDetail";
     }
 
+    @RequestMapping(value = "/getTableDetailJson")
+    @ResponseBody
+    public Map getTableDetailJson(HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        int status = 0;
+        String message = "";
+        int tableId = Integer.parseInt(getStr(request.getParameter("tableId"),"0"));
+        List<Map> tableDetail = new ArrayList<>();
+        if(tableId != 0){
+            tableDetail = tableParamService.getParamsByTId(tableId);
+        }
+//        m.addAttribute("tableDetail",tableDetail);
+        resultMap.put("tableDetailJson",tableDetail);
+        return  resultMap;
+    }
     private Map requestToMap(HttpServletRequest request, String[] paramNames) {
         Map paramMap = new HashMap();
         int num = 0;

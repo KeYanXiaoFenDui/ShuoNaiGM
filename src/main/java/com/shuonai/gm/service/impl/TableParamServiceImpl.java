@@ -58,6 +58,11 @@ public class TableParamServiceImpl implements ITableParamService {
     }
 
     @Override
+    public List<Map> getTableListByNames(String tables) {
+        return tableParamMapper.getTableListByNames(tables);
+    }
+
+    @Override
     public List<Map> getParamsByTId(int tableId) {
         return tableParamMapper.getParamsByTId(tableId);
     }

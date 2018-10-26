@@ -4,6 +4,8 @@ package com.shuonai.gm.util;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 设置工作路径
@@ -27,42 +29,50 @@ public class ShangXianUtil {
     //失败数
     private static int fail = 0;
 
-    public static void main(String[] args) {
-//        factory("C:/Users/冼世龙/Desktop/ssss.txt","C:/Users/冼世龙/Desktop/test");
-//        dllTo_aAsASQL("");
-//        domainParamToSetMethod("s");
-        List<String> line = readTxtLines("D:/桌面文件/ssss.txt");
-        int flag = 0;//0找/**  1找中文方法名  2找英文方法名
-        String system = "/api/business";
-        String model = "";
-        String method = "";
-        for(String l : line){
-            if(flag == 0){
-                int i = l.indexOf("/**");
-                if(i != -1){
-                    flag = 1;
-                    continue;
-                }
-            }
-            if(flag == 1){
-                method = l.trim().substring(2);
-//                method = l.trim();
-//                System.out.println("method:"+method);
-                flag = 2;
-                continue;
-            }
-            if(flag == 2){
-                int i = l.indexOf("@RequestMapping");
-                if(i != -1){
-                    l = l.substring(l.indexOf("\"/")+1,l.lastIndexOf("\""));
-                    if(model.equals("")){model = l.trim();flag = 0;System.out.println("model:"+l);continue;}
-                    System.out.println(system+model+l.trim()+"\t"+method);
-                    flag = 0;
-                    continue;
-                }
-            }
-        }
+    public static void main(String[] args){
+        String str = "a;sdj{213f}},{sdjlk};ald;;125{sd11}";
+        String regEx = "\\{.*?\\}";
+        String regEx2 = "<([^>]*)>";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(str);
+        System.out.println(m.replaceAll("").trim());
     }
+//    public static void main(String[] args) {
+////        factory("C:/Users/冼世龙/Desktop/ssss.txt","C:/Users/冼世龙/Desktop/test");
+////        dllTo_aAsASQL("");
+////        domainParamToSetMethod("s");
+//        List<String> line = readTxtLines("D:/桌面文件/ssss.txt");
+//        int flag = 0;//0找/**  1找中文方法名  2找英文方法名
+//        String system = "/api/business";
+//        String model = "";
+//        String method = "";
+//        for(String l : line){
+//            if(flag == 0){
+//                int i = l.indexOf("/**");
+//                if(i != -1){
+//                    flag = 1;
+//                    continue;
+//                }
+//            }
+//            if(flag == 1){
+//                method = l.trim().substring(2);
+////                method = l.trim();
+////                System.out.println("method:"+method);
+//                flag = 2;
+//                continue;
+//            }
+//            if(flag == 2){
+//                int i = l.indexOf("@RequestMapping");
+//                if(i != -1){
+//                    l = l.substring(l.indexOf("\"/")+1,l.lastIndexOf("\""));
+//                    if(model.equals("")){model = l.trim();flag = 0;System.out.println("model:"+l);continue;}
+//                    System.out.println(system+model+l.trim()+"\t"+method);
+//                    flag = 0;
+//                    continue;
+//                }
+//            }
+//        }
+//    }
 
     /**
      * 读取txt里的dll(数据库对象数据),,生成对象,,增删查改Sql,,接口和实现类

@@ -22,5 +22,7 @@ public interface ITableParamService {
 
     public List<Map> getTableList();
 
+    public List<Map> getTableListByNames(String tables);
+
     public List<Map> getParamsByTId(int tableId);
 }

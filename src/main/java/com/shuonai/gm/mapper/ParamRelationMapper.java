@@ -19,4 +19,7 @@ public interface ParamRelationMapper {
     @Select("select * from param_relation where id=#{id}")
     public ParamRelation getParamRelation(int id);
 
+    @Select("select * from param_relation pr where pr.table_a = #{tableA} and pr.table_b = #{tableB}")
+    public ParamRelation getTableRelation(@Param("tableA") String tableA,@Param("tableB") String tableB);
+
 }

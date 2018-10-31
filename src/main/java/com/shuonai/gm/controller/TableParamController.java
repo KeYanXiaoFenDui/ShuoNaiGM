@@ -1,7 +1,10 @@
 package com.shuonai.gm.controller;
 
+import com.shuonai.gm.domain.ParamRelation;
 import com.shuonai.gm.domain.TableParam;
+import com.shuonai.gm.service.IParamRelationService;
 import com.shuonai.gm.service.ITableParamService;
+import com.shuonai.gm.util.CommonUtil;
 import com.shuonai.gm.util.ShangXianUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,7 +33,8 @@ public class TableParamController {
 
     @Autowired
     private ITableParamService tableParamService;
-
+    @Autowired
+    private IParamRelationService paramRelationService;
     @ResponseBody
     @RequestMapping(value = "/createTableParam")
     public Map getUserMsgAction(HttpServletRequest request) {
@@ -115,7 +119,8 @@ public class TableParamController {
             }
             sb.deleteCharAt(sb.length()-1);
             System.out.println("tables:"+sb.toString());
-            tableList = tableParamService.getTableListByNames(sb.toString());
+//            tableList = tableParamService.getTableListByNames(sb.toString());//查询有关联的表
+            tableList = tableParamService.getTableList();
         }
         resultMap.put("tableListJson",tableList);
         return  resultMap;
@@ -155,6 +160,27 @@ public class TableParamController {
         resultMap.put("tableDetailJson",tableDetail);
         return  resultMap;
     }
+
+    //根据两个表,查询有关联的字段
+    @RequestMapping(value = "/getTableRelation")
+    @ResponseBody
+    public Map getTableRelation(HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        int status = 0;
+        String message = "失败";
+        String tableA = getStr(request.getParameter("tableA"),"");
+        if(tableA.equals("")){return ToResultHashMap(status,"tableA不能为空!");}
+        String tableB = getStr(request.getParameter("tableB"),"");
+        if(tableB.equals("")){return ToResultHashMap(status,"tableB不能为空!");}
+        ParamRelation pr = paramRelationService.getTableRelation(tableA,tableB);
+        if(pr != null){
+            resultMap.put("tableRelation",pr);
+            status = 1;
+            message = "成功";
+        }
+        return  CommonUtil.ToResultHashMap(status,message,resultMap);
+    }
+
     private Map requestToMap(HttpServletRequest request, String[] paramNames) {
         Map paramMap = new HashMap();
         int num = 0;
@@ -212,5 +238,11 @@ public class TableParamController {
             return edefaultStrfaultStr;
         }
         return str.toString().trim();
+    }
+    public static HashMap<String,Object> ToResultHashMap(int status, String message)  {
+        HashMap<String,Object> map= new HashMap<>();
+        map.put("statusCode",status);
+        map.put("msg",message);
+        return map;
     }
 }

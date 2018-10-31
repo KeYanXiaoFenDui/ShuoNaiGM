@@ -6,6 +6,12 @@
     <link href="http://localhost:8080/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="http://localhost:8080/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet"/>
     <link href="http://localhost:8080/jquery/css/jquery.tagsinput.css" rel="stylesheet" type="text/css" />
+    <style>
+        .float-left{
+            float: left;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
@@ -99,21 +105,22 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="panel-449890">
-                                <p>
-                                    <div id="left-list"></div>
-                                </p>
+                                <div id="left-list"></div>
                             </div>
                             <div class="tab-pane" id="panel-828541">
-                                <p>
-                                    <div id="left-list-sql">
-                                        <span class="label label-default">标签</span>
-                                        <span class="label label-primary">标签</span>
-                                        <span class="label label-success">标签</span>
-                                        <span class="label label-info">标签</span>
-                                        <span class="label label-warning">标签</span>
-                                        <span class="label label-danger">标签</span>
-                                    </div>
-                                </p>
+                                <div id="left-list-sql">
+                                    <div id="left-list-sql-table">已选表：</div>
+                                    <div id="left-list-sql-table-relation">表间关系：</div>
+                                    <div id="left-list-sql-param">已选参数：</div>
+                                    <div id="left-list-sql-where">已选条件：</div>
+                                    <span class="label label-default">标签</span>
+                                    <span class="label label-primary">标签</span>
+                                    <span class="label label-success">标签</span>
+                                    <span class="label label-info">标签</span>
+                                    <span class="label label-warning">标签</span>
+                                    <span class="label label-danger">标签</span>
+                                    <div><div id="left-list-sql-sql">生成sql：</div><button class="btn btn-default" type="button">as sub search</button><button class="btn btn-default" type="button">submit</button></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -146,8 +153,45 @@
                     <div>
                         <input type="hidden" value="sdf"/>
                         <span style="line-height: 30px;">条件字段：</span>
-                        <input name="tags" id="whereParamTags" value="1=1" />
+                        <input name="tags" id="whereParamTags" value="" />
                     </div>
+
+                    <a id="modal-465195" href="#modal-container-465195" role="button" class="btn" data-toggle="modal">触发遮罩窗体</a>
+
+                    <div class="modal fade" id="modal-container-465195" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <h4 class="modal-title" id="myModalLabel">
+                                        关联表
+                                    </h4>
+                                </div>
+                                <div class="modal-body" id="myModalLabel-body">
+                                    <input type="hidden" id="first-table">
+                                    <input type="hidden" id="second-table">
+                                    <input type="hidden" id="table-relation">
+                                    <div id="myModalLabel-table">
+
+                                    </div>
+                                    <div id="myModalLabel-relation">
+                                        <span class="label label-default" onclick="setTableRelation('=','normal-relation')" id="normal-relation">常连接</span>
+                                        <span class="label label-default" onclick="setTableRelation('left join','left-join-relation')" id="left-join-relation">左连接</span>
+                                        <span class="label label-default" onclick="setTableRelation('right join','right-join-relation')" id="right-join-relation">右连接</span>
+                                        <span class="label label-default" onclick="setTableRelation('inner','inner-relation')" id="inner-relation">内连接</span>
+                                        <span class="label label-default" onclick="setTableRelation('union all','union-all-relation')" id="union-all-relation">联合查询</span>
+                                    </div>
+                                    <div>
+                                        <span>表关系：</span><span id="fisrt-relation-second"></span>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> <button type="button" class="btn btn-primary" onclick="searchTableRelation()">保存</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -159,6 +203,7 @@
 <script src="http://localhost:8080/jquery/jquery.tagsinput.js"></script>
 <script>
 
+    var abc = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n"];
     window.onload = function(){
         getTableList();
         $('#tableTags').tagsInput({
@@ -247,22 +292,32 @@
                     var wclas = "btn btn-default btn-info";
                     var text = "选择";
                     var wtext = "选择";
-                    if(paramStr.indexOf(data[i].low_case_param+'{'+tableId+'}') != -1){clas = "btn btn-default btn-danger";text = "删除";}
-                    if(wParamStr.indexOf(data[i].low_case_param+'{'+tableId+'}') != -1){wclas = "btn btn-default btn-danger";wtext = "删除";}
+                    var params = paramStr.split(",");
+                    for(var j = 0;params.length > j;j++){
+                        if(params[j] == data[i].db_param_name+'{'+tableId+'}'){
+                            clas = "btn btn-default btn-danger";text = "删除";
+                        }
+                    }
+                    var wParams = wParamStr.split(",");
+                    for(var j = 0;wParams.length > j;j++){
+                        if(wParams[j] == data[i].db_param_name+'{'+tableId+'}'){
+                            wclas = "btn btn-default btn-danger";wtext = "删除";
+                        }
+                    }
                     buffer += '<tr class="success"><td>'+data[i].id+'</td>' +
                         '<td>'+data[i].comment+'</td>' +
                         '<td>'+data[i].param_type+'</td>' +
-                        '<td>'+data[i].low_case_param+'</td>' +
-                        '<td><button class="btn" type="button" onclick="getTableList()">看表</button><button id="'+data[i].low_case_param+tableId+'" class="'+clas+'" type="button" onclick="addSearchParamTags('+tableId+',&apos;';
+                        '<td>'+data[i].db_param_name+'</td>' +
+                        '<td><button class="btn" type="button" onclick="getTableList()">看表</button><button id="'+data[i].db_param_name+tableId+'" class="'+clas+'" type="button" onclick="addSearchParamTags('+tableId+',&apos;';
                     buffer += '{'+tableId+'}';
                     buffer += '&apos;,&apos;';
-                    buffer += data[i].low_case_param;
+                    buffer += data[i].db_param_name;
                     buffer += '&apos;,&apos;';
                     buffer += '['+data[i].id+']';
-                    buffer += '&apos;)">'+text+'</button><button id="w'+data[i].low_case_param+tableId+'" class="'+wclas+'" type="button" onclick="addWhereParamTags('+tableId+',&apos;';
+                    buffer += '&apos;)">'+text+'</button><button id="w'+data[i].db_param_name+tableId+'" class="'+wclas+'" type="button" onclick="addWhereParamTags('+tableId+',&apos;';
                     buffer += '{'+tableId+'}';
                     buffer += '&apos;,&apos;';
-                    buffer += data[i].low_case_param;
+                    buffer += data[i].db_param_name;
                     buffer += '&apos;,&apos;';
                     buffer += '['+data[i].id+']';
                     buffer += '&apos;)">'+wtext+'</button></td></tr>';
@@ -329,7 +384,12 @@
                 for(var i = 0; data.length > i;i++){
                     var clas = "btn btn-default btn-info";
                     var text = "选择";
-                    if(tableStr.indexOf(data[i].tableName+'{'+data[i].tableId+'}') != -1){clas = "btn btn-default btn-danger";text = "删除";}
+                    var tables = tableStr.split(",");
+                    for(var j = 0;tables.length > j;j++){
+                        if(tables[j] == data[i].tableName+'{'+data[i].tableId+'}'){
+                            clas = "btn btn-default btn-danger";text = "删除";
+                        }
+                    }
                     buffer += '<tr class="success"><td>'+data[i].tableId+'</td>';
                     buffer += '<td>'+data[i].tableNameCN+'</td>';
                     buffer += '<td>'+data[i].tableName+'</td>';
@@ -354,10 +414,112 @@
         $("#method").text(method);
     }
     function sql(){
-        $("#tableTags").val();
-        $("#searchParamTags").val();
-        $("#whereParamTags").val();
-        $("#left-list-sql").text($("#tableTags").val()+$("#searchParamTags").val()+$("#whereParamTags").val());
+        var colorIndex = 0;
+        var color = ["label-primary","label-success","label-info","label-warning","label-danger","label-default"];
+
+        var tableStr = $("#tableTags").val();
+        var tables = tableStr.split(",");
+        var str = "";
+        for(var i = 0;tables.length > i; i++){
+            str += '<span id="sql-table-'+tables[i].replace(/\{|\}/g,"")+'" class="label label-default float-left" onclick="showDiv(&apos;'+tables[i].replace(/\{[^\}]+\}/g,"")+'&apos;)">'+tables[i].replace(/\{[^\}]+\}/g,"")+'</span><a id="modal-465195" href="#modal-container-465195" role="button" class="btn" data-toggle="modal" style="display: none;">触发遮罩窗体</a>';
+        }
+        $("#left-list-sql-table").html("<span>已选表：</span><div>"+str+"</div><div class='row clearfix'></div>");
+
+        var paramStr = $("#searchParamTags").val();
+        var params = paramStr.split(",");
+        var str2 = "";
+        for(var i = 0;params.length > i; i++){
+            str2 += '<span id="sql-param-'+params[i].replace(/\{|\}/g,"")+'" class="label label-default float-left">'+params[i].replace(/\{[^\}]+\}/g,"")+'</span>';
+        }
+        $("#left-list-sql-param").html("<span>已选参数：</span><div>"+str2+"</div><div class='row clearfix'></div>");
+
+        var whereStr = $("#whereParamTags").val();
+        var wheres = whereStr.split(",");
+        var str3 = "";
+        for(var i = 0;wheres.length > i; i++){
+            str3 += '<span id="sql-where-'+wheres[i].replace(/\{|\}/g,"")+'" class="label label-default float-left">'+wheres[i].replace(/\{[^\}]+\}/g,"")+'</span>';
+        }
+        $("#left-list-sql-where").html("<span>已选条件：</span><div>"+str3+"</div><div class='row clearfix'></div>");
+
+        for(var i = 0;tables.length > i; i++){
+            $("#"+"sql-table-"+tables[i].replace(/\{|\}/g,"")).removeClass("label-default");
+            $("#"+"sql-table-"+tables[i].replace(/\{|\}/g,"")).addClass(color[i]);
+            var index = tables[i].substring(tables[i].indexOf("{"),tables[i].lastIndexOf("}")+1);//index为{n}
+            for(var j = 0;params.length > j; j++){
+                if(params[j].indexOf(index) != -1){//字段属于这个表
+                    $("#"+"sql-param-"+params[j].replace(/\{|\}/g,"")).removeClass("label-default");
+                    $("#"+"sql-param-"+params[j].replace(/\{|\}/g,"")).addClass(color[i]);
+                }
+            }
+            for(var j = 0;wheres.length > j; j++){
+                if(wheres[j].indexOf(index) != -1){//查询条件属于这个表
+                    $("#"+"sql-where-"+wheres[j].replace(/\{|\}/g,"")).removeClass("label-default");
+                    $("#"+"sql-where-"+wheres[j].replace(/\{|\}/g,"")).addClass(color[i]);
+                }
+            }
+        }
+//        $("#left-list-sql-table").text("已选表："+$("#tableTags").val().replace(/\{[^\}]+\}/g,""));
+//        $("#left-list-sql-param").text("已选参数："+$("#searchParamTags").val().replace(/\{[^\}]+\}/g,""));
+//        $("#left-list-sql-where").text("已选条件："+$("#whereParamTags").val().replace(/\{[^\}]+\}/g,""));
+        $("#left-list-sql-sql").html("<span>生成sql：</span>"+"<p style='word-wrap: break-word;word-break: normal;'>"+"select "+$("#searchParamTags").val().replace(/\{[^\}]+\}/g,"")+" from "+$("#tableTags").val().replace(/\{[^\}]+\}/g,"") + " where "+$("#whereParamTags").val().replace(/\{[^\}]+\}/g,"")+"</p>");
+    }
+
+    function showDiv(content) {
+        $("#modal-465195").click();
+        $("#myModalLabel").text(content);
+//        $("#myModalLabel-table").text($("#tableTags").val().replace(/\{[^\}]+\}/g,""));
+        var tableStr = $("#tableTags").val().replace(/\{[^\}]+\}/g,"");
+        var tables = tableStr.split(",");
+        var str = "";
+        for(var i = 0;tables.length>i;i++){
+            str += '<span id="sql-table-'+tables[i]+'" class="label label-default" onclick="setTable(&apos;'+tables[i]+'&apos;)">'+tables[i]+'</span>';
+        }
+        $("#myModalLabel-table").html(str);
+        $("#first-table").val(content);
+        $("#second-table").val("");
+        $("#myModalLabel-relation span").removeClass("label-success");
+        $("#table-relation").val("");
+        $("#fisrt-relation-second").text("");
+    }
+    function setTable(table) {
+        $("#second-table").val(table);
+        $("#myModalLabel-table span").removeClass("label-success");
+        $("#sql-table-"+table).addClass("label-success");
+        if($("#second-table").val() != "" && $("#second-table").val() != null && $("#table-relation").val() != "" && $("#table-relation").val() != null){
+            $("#fisrt-relation-second").text($("#first-table").val()+" "+ $("#table-relation").val() + " "+ $("#second-table").val() + " on 1=1");
+        }
+    }
+    function setTableRelation(v,relationId) {
+        $("#table-relation").val(v);
+        $("#myModalLabel-relation span").removeClass("label-success");
+        $("#"+relationId).addClass("label-success");
+        if($("#second-table").val() != "" && $("#second-table").val() != null && $("#table-relation").val() != "" && $("#table-relation").val() != null){
+            $("#fisrt-relation-second").text($("#first-table").val()+" "+ $("#table-relation").val() + " "+ $("#second-table").val() + " on 1=1");
+        }
+    }
+    function searchTableRelation(){
+        if($("#first-table").val() == "" || $("#first-table").val() == null){
+            alert("表A数据为空!");
+        }
+        if($("#second-table").val() == "" || $("#second-table").val() == null){
+            alert("表B数据为空!");
+        }
+        $.ajax({
+            url: "http://localhost:8080/tableParam/getTableRelation",
+            data: {
+                tableA:$("#first-table").val(),
+                tableB:$("#second-table").val()
+            },
+            success: function(result){
+                if(result.status == 0){
+                    alert(result.message);
+                }
+                if(result.status == 1){
+                    var pr = result.data.tableRelation;
+                    $("#fisrt-relation-second").text($("#first-table").val()+" "+ $("#table-relation").val() + " "+ $("#second-table").val() + " on "+$("#first-table").val()+"."+pr.paramA+" = "+$("#second-table").val()+"."+pr.paramB);
+                }
+            }
+        });
     }
 </script>
 </body>

@@ -12,4 +12,6 @@ public interface IParamRelationService {
     public int deleteParamRelation(int id);
 
     public ParamRelation getParamRelation(int id);
+
+    public ParamRelation getTableRelation(String tableA,String tableB);
 }

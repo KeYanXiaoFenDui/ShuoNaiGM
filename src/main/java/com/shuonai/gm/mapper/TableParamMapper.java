@@ -32,11 +32,11 @@ public interface TableParamMapper {
     @Select("select case when max(table_id) is null then 1 else max(table_id)+1 end as maxTableId from table_param")
     public int getMaxTableId();
 
-    @Select("select t.table_id as tableId,t.table_name_cn as tableNameCN,t.table_name as tableName from table_param t group by t.table_id")
-    public List<Map> getTableList();
-
     @SelectProvider(type = TableParamSQLProvider.class,method = "getTableListByNames")
     public List<Map> getTableListByNames(String tables);
+
+    @Select("select tt.id as tableId,tt.table_name_cn as tableNameCN,tt.table_name as tableName from table_table tt")
+    public List<Map> getTableList();
 
     @Select("select * from table_param t where t.table_id = #{tableId}")
     public List<Map> getParamsByTId(int tableId);

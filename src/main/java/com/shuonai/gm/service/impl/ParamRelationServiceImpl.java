@@ -30,4 +30,9 @@ public class ParamRelationServiceImpl implements IParamRelationService {
     public ParamRelation getParamRelation(int id) {
         return paramRelationMapper.getParamRelation(id);
     }
+
+    @Override
+    public ParamRelation getTableRelation(String tableA, String tableB) {
+        return paramRelationMapper.getTableRelation(tableA,tableB);
+    }
 }

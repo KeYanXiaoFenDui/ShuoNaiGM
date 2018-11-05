@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8"/>
+    <title>controller</title>
+    <link href="http://localhost:8080/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="http://localhost:8080/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet"/>
+    <link href="http://localhost:8080/jquery/css/jquery.tagsinput.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="row">
+            <nav class="navbar navbar-default navbar-inverse" role="navigation">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">Destiny</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="/tableList.html">tableList</a>
+                        </li>
+                        <li>
+                            <a href="/controller.html">controller</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#">Action</a>
+                                </li>
+                                <li>
+                                    <a href="#">Another action</a>
+                                </li>
+                                <li>
+                                    <a href="#">Something else here</a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="#">Separated link</a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="#">One more separated link</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" />
+                        </div> <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#">Link</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#">Action</a>
+                                </li>
+                                <li>
+                                    <a href="#">Another action</a>
+                                </li>
+                                <li>
+                                    <a href="#">Something else here</a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="#">Separated link</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+            </nav>
+            </div>
+            <div class="row clearfix">
+
+                <!-- 左半列表start -->
+                <div class="col-md-8 column">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>
+                                序号
+                            </th>
+                            <th>
+                                类型
+                            </th>
+                            <th>
+                                参数
+                            </th>
+                            <th>
+                                操作
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                1
+                            </td>
+                            <td>
+                                请求类型
+                            </td>
+                            <td>
+                                POST/GET
+                            </td>
+                            <td>
+                                <button class="btn btn-default" type="button">POST</button><button class="btn btn-default" type="button">GET</button>
+                            </td>
+                        </tr>
+                        <tr class="success">
+                            <td>
+                                2
+                            </td>
+                            <td>
+                                数据库操作类型
+                            </td>
+                            <td>
+                                查改增删
+                            </td>
+                            <td>
+                                <button class="btn btn-default" type="button">查</button>
+                                <button class="btn btn-default" type="button">改</button>
+                                <button class="btn btn-default" type="button">增</button>
+                                <button class="btn btn-default" type="button">删</button>
+                            </td>
+                        </tr>
+                        <tr class="error">
+                            <td>
+                                3
+                            </td>
+                            <td>
+                                是否添加事务
+                            </td>
+                            <td>
+                                是/否
+                            </td>
+                            <td>
+                                <button class="btn btn-default" type="button">是</button>
+                                <button class="btn btn-default" type="button">否</button>
+                            </td>
+                        </tr>
+                        <tr class="warning">
+                            <td>
+                                4
+                            </td>
+                            <td>
+                                逻辑分支
+                            </td>
+                            <td>
+                                xxx
+                            </td>
+                            <td>
+                                xxxx
+                            </td>
+                        </tr>
+                        <tr class="info">
+                            <td>
+                                5
+                            </td>
+                            <td>
+                                输入数据校验
+                            </td>
+                            <td>
+                                xxxx
+                            </td>
+                            <td>
+                                xxxxxx
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                6
+                            </td>
+                            <td>
+                                新建对象
+                            </td>
+                            <td>
+                                xxxx
+                            </td>
+                            <td>
+                                xxxxxx
+                            </td>
+                        </tr>
+                        <tr class="success">
+                            <td>
+                                7
+                            </td>
+                            <td>
+                                返回数据格式
+                            </td>
+                            <td>
+                                xxxx
+                            </td>
+                            <td>
+                                xxxxxx
+                            </td>
+                        </tr>
+                        <tr class="error">
+                            <td>
+                                8
+                            </td>
+                            <td>
+                                逻辑块
+                            </td>
+                            <td>
+                                xxxx
+                            </td>
+                            <td>
+                                xxxxxx
+                            </td>
+                        </tr>
+                        <tr class="warning">
+                            <td>
+                                9
+                            </td>
+                            <td>
+                                xxxx
+                            </td>
+                            <td>
+                                xxxx
+                            </td>
+                            <td>
+                                xxxxxx
+                            </td>
+                        </tr>
+                        <tr class="info">
+                            <td>
+                                10
+                            </td>
+                            <td>
+                                xxxxx
+                            </td>
+                            <td>
+                                xxxx
+                            </td>
+                            <td>
+                                xxxxxx
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--<div class="col-md-8 column" id="left-list"></div>-->
+                <!-- 左半列表end -->
+                <div class="col-md-4 column">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="http://localhost:8080/jquery/jquery-3.2.1.min.js"></script>
+<script src="http://localhost:8080/bootstrap/js/bootstrap.min.js"></script>
+<script src="http://localhost:8080/jquery/jquery.tagsinput.js"></script>
+</body>
+</html>

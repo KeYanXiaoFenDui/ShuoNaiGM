@@ -27,10 +27,10 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li class="active">
-                            <a href="/tableParam/getTableList">tableList</a>
+                            <a href="/tableList.html">tableList</a>
                         </li>
                         <li>
-                            <a href="#">Link</a>
+                            <a href="/controller.html">controller</a>
                         </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
@@ -216,7 +216,7 @@
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                     <h4 class="modal-title" id="myModalLabel-a">
-                                        标题
+                                        where查询参数窗
                                     </h4>
                                 </div>
                                 <div class="modal-body" id="myModalLabel-body-a">
@@ -244,6 +244,52 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> <button type="button" class="btn btn-primary" onclick="saveWhereWay()">保存</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <a id="modal-123456" href="#modal-container-123456" role="button" class="btn" data-toggle="modal">触发遮罩窗体a</a>
+
+                    <div class="modal fade" id="modal-container-123456" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <h4 class="modal-title" id="myModalLabel-b">
+                                        param参数窗
+                                    </h4>
+                                </div>
+                                <div class="modal-body" id="myModalLabel-body-b">
+                                    <input type="hidden" id="nowParam"/>
+                                    <div id="myModalLabel-body-b-method">
+                                        <span class="label label-default" onclick="setParamMethod('max','max-method')" id="max-method">最大</span>
+                                        <span class="label label-default" onclick="setParamMethod('min','min-method')" id="min-method">最小</span>
+                                        <span class="label label-default" onclick="setParamMethod('sum','sum-method')" id="sum-method">求和</span>
+                                        <span class="label label-default" onclick="setParamMethod('count','count-method')" id="count-method">总条数</span>
+                                        <span class="label label-default" onclick="setParamMethod('distinct','distinct-method')" id="distinct-method">每项唯一</span>
+                                        <span class="label label-default" onclick="setParamMethod('','none-method')" id="none-method">无</span>
+                                    </div>
+                                    <div id="myModalLabel-body-b-method-2">
+                                        <span class="label label-default" onclick="setIfNull()" id="ifnull-method" val="f">是否为空</span>
+                                        <span class="label label-default" onclick="setParamAs()" id="as-method" val="f">As</span>
+                                    </div>
+                                    <!--<div class='row clearfix' style="height: 20px;"></div>-->
+                                    <div id="ifnullDiv" style="display: none;">
+                                        <span>ifnull默认：</span><input type="text" class="form-control" id="inputTestB"/>
+                                    </div>
+
+                                    <div id="asDiv" style="display: none;">
+                                        <span>As：</span><input type="text" class="form-control" id="inputTestC"/>
+                                    </div>
+
+                                    <div>
+                                        <span>结果：</span><span id="param-method-result-b"></span>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> <button type="button" class="btn btn-primary" onclick="saveParamMethod()">保存</button>
                                 </div>
                             </div>
                         </div>
@@ -525,8 +571,12 @@
         var sqlStr2 = "";
         for(var i = 0;params.length > i; i++){
             paramArray.push(params[i]);
-            str2 += '<span id="sql-param-'+params[i].replace(/\{|\}/g,"")+'" class="label label-default float-left">'+params[i].replace(/\{[^\}]+\}/g,"")+'</span>';
-            sqlStr2 += '<span id="sql-str-param-'+params[i].replace(/\{|\}/g,"")+'">'+params[i].replace(/\{[^\}]+\}/g,"")+'</span>';
+            str2 += '<span id="sql-param-'+params[i].replace(/\{|\}/g,"")+'" class="label label-default float-left" onclick="showParamDiv(&apos;'+params[i]+'&apos;)">'+params[i].replace(/\{[^\}]+\}/g,"")+'</span>';
+            if(i<params.length-1) {
+                sqlStr2 += '<span id="sql-str-param-' + params[i].replace(/\{|\}/g, "") + '">' + params[i].replace(/\{[^\}]+\}/g, "") + '</span><span>, </span>';
+            }else{
+                sqlStr2 += '<span id="sql-str-param-' + params[i].replace(/\{|\}/g, "") + '">' + params[i].replace(/\{[^\}]+\}/g, "") + '</span>';
+            }
         }
         $("#sql-param-array").val(paramArray.toString());
         $("#left-list-sql-param").html("<span>已选参数：</span><div>"+str2+"</div><div class='row clearfix'></div>");
@@ -563,11 +613,12 @@
                 if(params[j].indexOf(index) != -1){//字段属于这个表
                     $("#"+"sql-param-"+params[j].replace(/\{|\}/g,"")).removeClass("label-default");
                     $("#"+"sql-param-"+params[j].replace(/\{|\}/g,"")).addClass(color[i]);
-                    if(j<params.length-1){
-                        $("#"+"sql-str-param-"+params[j].replace(/\{|\}/g,"")).text(abc[i]+"."+$("#"+"sql-str-param-"+params[j].replace(/\{|\}/g,"")).text()+", ");
-                    }else{
-                        $("#"+"sql-str-param-"+params[j].replace(/\{|\}/g,"")).text(abc[i]+"."+$("#"+"sql-str-param-"+params[j].replace(/\{|\}/g,"")).text());
-                    }
+//                    if(j<params.length-1){
+//                        $("#"+"sql-str-param-"+params[j].replace(/\{|\}/g,"")).text(abc[i]+"."+$("#"+"sql-str-param-"+params[j].replace(/\{|\}/g,"")).text()+", ");
+//                    }else{
+                    $("#"+"sql-str-param-"+params[j].replace(/\{|\}/g,"")).text(abc[i]+"."+$("#"+"sql-str-param-"+params[j].replace(/\{|\}/g,"")).text());
+                    $("#"+"sql-str-param-"+params[j].replace(/\{|\}/g,"")).attr('val',$("#"+"sql-str-param-"+params[j].replace(/\{|\}/g,"")).text());
+//                    }
                 }
             }
             for(var j = 0;wheres.length > j; j++){
@@ -685,7 +736,7 @@
         $("#where-way").val("");
         $("#inputTest").val("");
         $("#where-way-result").text("");
-        $("#myModalLabel-body-a").removeClass("label-success");
+        $("#myModalLabel-body-a span").removeClass("label-success");
     }
     function setAndOr(v,whereWay){
         $("#and-or-way").val(v);
@@ -713,6 +764,141 @@
         }
         $("#sql-result-where").html(" where 1=1 "+strResult+"<div class='row clearfix'></div>");
     }
+    function showParamDiv(content){
+        $("#modal-123456").click();
+        $("#myModalLabel-b").text(content.replace(/\{[^\}]+\}/g,""));
+        $("#nowParam").val(content);
+//        var tableNum = content.substring(0,content.indexOf("}")+1).replace(/\{|\}/g,"");
+//        $("#"+tableNum+"table").val();
+//        alert(tableNum);
+//        $("#where-way-result").text($("#"+tableNum+"table").val()+"."+content.replace(/\{[^\}]+\}/g,""));
+//        $("#where-param").val($("#"+tableNum+"table").val()+"."+content.replace(/\{[^\}]+\}/g,""));
+//        $("#and-or-way").val("");
+//        $("#where-way").val("");
+        $("#ifnullDiv").hide();
+        $("#asDiv").hide();
+        $("#inputTestB").val("");
+        $("#inputTestC").val("");
+        $("#param-method-result-b").text("");
+//        $("#where-way-result").text("");
+        $("#myModalLabel-body-b-method span").removeClass("label-success");
+        $("#myModalLabel-body-b-method-2 span").removeClass("label-success");
+        $("#myModalLabel-body-b-method span").addClass("label-default");
+        $("#myModalLabel-body-b-method-2 span").addClass("label-default");
+        var valMethod = $("#sql-str-param-"+content.replace(/\{|\}/g,"")).attr("valMethod");
+        var ifnull = $("#sql-str-param-"+content.replace(/\{|\}/g,"")).attr("ifnull");
+        var ifnullText = $("#sql-str-param-"+content.replace(/\{|\}/g,"")).attr("ifnullText");
+        var asMethod = $("#sql-str-param-"+content.replace(/\{|\}/g,"")).attr("asMethod");
+        var asMethodText = $("#sql-str-param-"+content.replace(/\{|\}/g,"")).attr("asMethodText");
+        if(valMethod != null && valMethod != ""){
+            $("#"+valMethod+"-method").addClass("label-success");
+        }
+        if(ifnull != null && ifnull == "t"){
+            $("#ifnull-method").removeClass("label-default");
+            $("#ifnull-method").addClass("label-success");
+            $("#ifnullDiv").show();
+        }
+        if(ifnullText != null && ifnullText != ""){
+            $("#inputTestB").val(ifnullText);
+        }
+        if(asMethod != null && asMethod == "t"){
+            $("#as-method").removeClass("label-default");
+            $("#as-method").addClass("label-success");
+            $("#asDiv").show();
+        }
+        if(asMethodText != null && asMethodText != ""){
+            $("#inputTestC").val(asMethodText);
+        }
+    }
+    function setParamMethod(v,method){
+        var pv = $("#nowParam").val().replace(/\{|\}/g,"");
+        $("#sql-str-param-"+pv).attr("valMethod",v);
+        if(v != ""){
+            $("#sql-str-param-"+pv).text(v+'('+$("#sql-str-param-"+pv).attr('val')+')');
+            $("#param-method-result-b").text(v+'('+$("#sql-str-param-"+pv).attr('val')+')');
+        }else{
+            $("#sql-str-param-"+pv).text($("#sql-str-param-"+pv).attr('val'));
+            $("#param-method-result-b").text($("#sql-str-param-"+pv).attr('val'));
+        }
+        $("#myModalLabel-body-b-method span").removeClass("label-success");
+        $("#"+method).addClass("label-success");
+
+        $("#sql-str-param-"+pv).attr("ifnull","t");
+        $("#ifnull-method").attr("val","t");
+        setIfNull();
+        $("#sql-str-param-"+pv).attr("asMethod","t");
+        $("#as-method").attr("val","t");
+        setParamAs();
+
+    }
+    function setIfNull(){
+        $("#inputTestB").val("");
+        var pv = $("#nowParam").val().replace(/\{|\}/g,"");
+        var flag = $("#ifnull-method").attr("val");
+        if(flag == "f"){
+            $("#sql-str-param-"+pv).attr("ifnull","t");
+            $("#ifnull-method").attr("val","t");
+            $("#ifnull-method").removeClass("label-default");
+            $("#ifnull-method").addClass("label-success");
+            $("#ifnullDiv").show();
+//            $("#param-method-result-b").text('ifnull('+$("#sql-str-param-"+pv).text()+',\'\')');
+        }else{
+            $("#sql-str-param-"+pv).attr("ifnull","f");
+            $("#ifnull-method").attr("val","f");
+            $("#ifnull-method").removeClass("label-success");
+            $("#ifnull-method").addClass("label-default");
+            $("#ifnullDiv").hide();
+//            $("#param-method-result-b").text($("#sql-str-param-"+pv).text());
+        }
+    }
+    function setParamAs(){
+        $("#inputTestC").val("");
+        var pv = $("#nowParam").val().replace(/\{|\}/g,"");
+        var flag = $("#as-method").attr("val");
+        if(flag == "f"){
+            $("#sql-str-param-"+pv).attr("asMethod","t");
+            $("#as-method").attr("val","t");
+            $("#as-method").removeClass("label-default");
+            $("#as-method").addClass("label-success");
+            $("#asDiv").show();
+//            $("#param-method-result-b").text($("#sql-str-param-"+pv).text()+' as ');
+        }else{
+            $("#sql-str-param-"+pv).attr("asMethod","f");
+            $("#as-method").attr("val","f");
+            $("#as-method").removeClass("label-success");
+            $("#as-method").addClass("label-default");
+            $("#asDiv").hide();
+//            $("#param-method-result-b").text($("#sql-str-param-"+pv).text());
+        }
+    }
+
+    function saveParamMethod(){
+        var pv = $("#nowParam").val().replace(/\{|\}/g,"");
+        var ifnull = $("#sql-str-param-"+pv).attr("ifnull");
+        var asMethod = $("#sql-str-param-"+pv).attr("asMethod");
+        var valMethod = $("#sql-str-param-"+pv).attr("valMethod");
+        var str = "";
+        if(valMethod != null && valMethod != ""){
+            str = valMethod + '(' + $("#sql-str-param-"+pv).attr("val") + ')';
+        }else{
+            str = $("#sql-str-param-"+pv).attr("val");
+        }
+        if(ifnull == "t"){
+            $("#sql-str-param-"+pv).attr("ifnullText",$("#inputTestB").val());
+            str = 'ifnull('+str+',\''+$("#inputTestB").val()+'\')';
+        }
+        if(asMethod == "t"){
+            if($("#inputTestC").val() == null || $("#inputTestC").val() == ""){
+                alert("as必须传参!");
+                return;
+            }
+            $("#sql-str-param-"+pv).attr("asMethodText",$("#inputTestC").val())
+            str += ' as ' + $("#inputTestC").val();
+        }
+        $("#param-method-result-b").text(str);
+        $("#sql-str-param-"+pv).text(str);
+    }
+
     function asSubSearch(){
         var h = $("#left-list-sql-sql").html();
         console.log(delHtmlTag(h));

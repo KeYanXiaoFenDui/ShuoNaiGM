@@ -6,6 +6,7 @@ package com.shuonai.gm.util.constant;
  */
 public class MessageConstant {
     public static final String ERROR_INFO = "失败，服务器有异常";
+    public static final String ERROR_INFO_DEMO = "提交失败，请稍后重试";
     public static final String SUCCESS_INFO = "成功";
 
     public static final String NOT_FIND_DATA = "业务异常：没找到相关数据";

@@ -6,6 +6,12 @@
     <link href="http://localhost:8080/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="http://localhost:8080/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet"/>
     <link href="http://localhost:8080/jquery/css/jquery.tagsinput.css" rel="stylesheet" type="text/css" />
+    <style>
+        .text-title{
+            width: 150px;
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
 
@@ -87,177 +93,305 @@
             <div class="row clearfix">
 
                 <!-- 左半列表start -->
-                <div class="col-md-8 column">
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th>
-                                序号
-                            </th>
-                            <th>
-                                类型
-                            </th>
-                            <th>
-                                参数
-                            </th>
-                            <th>
-                                操作
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                请求类型
-                            </td>
-                            <td>
-                                POST/GET
-                            </td>
-                            <td>
-                                <button class="btn btn-default" type="button">POST</button><button class="btn btn-default" type="button">GET</button>
-                            </td>
-                        </tr>
-                        <tr class="success">
-                            <td>
-                                2
-                            </td>
-                            <td>
-                                数据库操作类型
-                            </td>
-                            <td>
-                                查改增删
-                            </td>
-                            <td>
-                                <button class="btn btn-default" type="button">查</button>
-                                <button class="btn btn-default" type="button">改</button>
-                                <button class="btn btn-default" type="button">增</button>
-                                <button class="btn btn-default" type="button">删</button>
-                            </td>
-                        </tr>
-                        <tr class="error">
-                            <td>
-                                3
-                            </td>
-                            <td>
-                                是否添加事务
-                            </td>
-                            <td>
-                                是/否
-                            </td>
-                            <td>
-                                <button class="btn btn-default" type="button">是</button>
-                                <button class="btn btn-default" type="button">否</button>
-                            </td>
-                        </tr>
-                        <tr class="warning">
-                            <td>
-                                4
-                            </td>
-                            <td>
-                                逻辑分支
-                            </td>
-                            <td>
-                                xxx
-                            </td>
-                            <td>
-                                xxxx
-                            </td>
-                        </tr>
-                        <tr class="info">
-                            <td>
-                                5
-                            </td>
-                            <td>
-                                输入数据校验
-                            </td>
-                            <td>
-                                xxxx
-                            </td>
-                            <td>
-                                xxxxxx
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                6
-                            </td>
-                            <td>
-                                新建对象
-                            </td>
-                            <td>
-                                xxxx
-                            </td>
-                            <td>
-                                xxxxxx
-                            </td>
-                        </tr>
-                        <tr class="success">
-                            <td>
-                                7
-                            </td>
-                            <td>
-                                返回数据格式
-                            </td>
-                            <td>
-                                xxxx
-                            </td>
-                            <td>
-                                xxxxxx
-                            </td>
-                        </tr>
-                        <tr class="error">
-                            <td>
-                                8
-                            </td>
-                            <td>
-                                逻辑块
-                            </td>
-                            <td>
-                                xxxx
-                            </td>
-                            <td>
-                                xxxxxx
-                            </td>
-                        </tr>
-                        <tr class="warning">
-                            <td>
-                                9
-                            </td>
-                            <td>
-                                xxxx
-                            </td>
-                            <td>
-                                xxxx
-                            </td>
-                            <td>
-                                xxxxxx
-                            </td>
-                        </tr>
-                        <tr class="info">
-                            <td>
-                                10
-                            </td>
-                            <td>
-                                xxxxx
-                            </td>
-                            <td>
-                                xxxx
-                            </td>
-                            <td>
-                                xxxxxx
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div class="col-md-12 column">
+
+                    <div class="tabbable" id="tabs-700952">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#panel-449890" data-toggle="tab">表和字段</a>
+                            </li>
+                            <li>
+                                <a href="#panel-828541" data-toggle="tab">API</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="panel-449890">
+                                <div id="left-a">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>
+                                                序号
+                                            </th>
+                                            <th>
+                                                类型
+                                            </th>
+                                            <th>
+                                                参数
+                                            </th>
+                                            <th>
+                                                操作
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                1
+                                            </td>
+                                            <td>
+                                                请求类型
+                                            </td>
+                                            <td>
+                                                POST/GET
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-default" type="button">POST</button><button class="btn btn-default" type="button">GET</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="success">
+                                            <td>
+                                                2
+                                            </td>
+                                            <td>
+                                                数据库操作类型
+                                            </td>
+                                            <td>
+                                                查改增删
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-default" type="button">查</button>
+                                                <button class="btn btn-default" type="button">改</button>
+                                                <button class="btn btn-default" type="button">增</button>
+                                                <button class="btn btn-default" type="button">删</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="error">
+                                            <td>
+                                                3
+                                            </td>
+                                            <td>
+                                                是否添加事务
+                                            </td>
+                                            <td>
+                                                是/否
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-default" type="button">是</button>
+                                                <button class="btn btn-default" type="button">否</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="warning">
+                                            <td>
+                                                4
+                                            </td>
+                                            <td>
+                                                逻辑分支
+                                            </td>
+                                            <td>
+                                                xxx
+                                            </td>
+                                            <td>
+                                                xxxx
+                                            </td>
+                                        </tr>
+                                        <tr class="info">
+                                            <td>
+                                                5
+                                            </td>
+                                            <td>
+                                                输入数据校验
+                                            </td>
+                                            <td>
+                                                xxxx
+                                            </td>
+                                            <td>
+                                                xxxxxx
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                6
+                                            </td>
+                                            <td>
+                                                新建对象
+                                            </td>
+                                            <td>
+                                                xxxx
+                                            </td>
+                                            <td>
+                                                xxxxxx
+                                            </td>
+                                        </tr>
+                                        <tr class="success">
+                                            <td>
+                                                7
+                                            </td>
+                                            <td>
+                                                返回数据格式
+                                            </td>
+                                            <td>
+                                                xxxx
+                                            </td>
+                                            <td>
+                                                xxxxxx
+                                            </td>
+                                        </tr>
+                                        <tr class="error">
+                                            <td>
+                                                8
+                                            </td>
+                                            <td>
+                                                逻辑块
+                                            </td>
+                                            <td>
+                                                xxxx
+                                            </td>
+                                            <td>
+                                                xxxxxx
+                                            </td>
+                                        </tr>
+                                        <tr class="warning">
+                                            <td>
+                                                9
+                                            </td>
+                                            <td>
+                                                xxxx
+                                            </td>
+                                            <td>
+                                                xxxx
+                                            </td>
+                                            <td>
+                                                xxxxxx
+                                            </td>
+                                        </tr>
+                                        <tr class="info">
+                                            <td>
+                                                10
+                                            </td>
+                                            <td>
+                                                xxxxx
+                                            </td>
+                                            <td>
+                                                xxxx
+                                            </td>
+                                            <td>
+                                                xxxxxx
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="panel-828541">
+                                <form action="/templet/newApi" method="post" id="apiForm">
+                                    <div id="left-b">
+                                        <button class="btn btn-default" type="button" onclick="saveApi()">
+                                            新建API
+                                        </button>
+                                        <div>
+                                            <span class="text-title">接口名称：</span><input type="text" id="api-name-input" name="apiName"/><br/>
+                                            <span class="text-title">接口基础路径：</span><input type="text" id="api-base-path-input" name="apiBasePath"/><br/>
+                                            <span class="text-title">接口方法名：</span><input type="text" id="api-method-input" name="apiMethod"/><br/>
+                                            <span class="text-title">作用注释：</span><input type="text" id="api-comment-input" name="apiComment"/><br/>
+                                            <span class="text-title">请求方法：</span>
+                                            <label for="request-method-a-input"><input type="radio" id="request-method-a-input" value="post" name="requestMethod"/>POST</label>
+                                            <label for="request-method-b-input"><input type="radio" id="request-method-b-input" value="get" name="requestMethod"/>GET</label><br/>
+                                            <div>
+                                                <span class="text-title">数据库操作：</span>
+                                                <label for="data-operation-a-input" onclick="setDataOperation('select')"><input type="radio" id="data-operation-a-input" value="select" name="dataOperation"/>查</label>
+                                                <label for="data-operation-b-input" onclick="setDataOperation('update')"><input type="radio" id="data-operation-b-input" value="update" name="dataOperation"/>改</label>
+                                                <label for="data-operation-c-input" onclick="setDataOperation('insert')"><input type="radio" id="data-operation-c-input" value="insert" name="dataOperation"/>增</label>
+                                                <label for="data-operation-d-input" onclick="setDataOperation('delete')"><input type="radio" id="data-operation-d-input" value="delete" name="dataOperation"/>删</label>
+                                            </div>
+                                            <div id="ifRollback-input-div" style="display: none;">
+                                                <span class="text-title">是否报错回滚：</span>
+                                                <label for="if-rollback-a-input"><input type="radio" id="if-rollback-a-input" value="1" name="ifRollback"/>是</label>
+                                                <label for="if-rollback-b-input"><input type="radio" id="if-rollback-b-input" value="0" name="ifRollback"/>否</label>
+                                            </div>
+                                            <div id="ifPages-input-div" style="display: none;">
+                                                <span class="text-title">是否分页：</span>
+                                                <label for="if-pages-a-input"><input type="radio" id="if-pages-a-input" value="1" name="ifPages"/>是</label>
+                                                <label for="if-pages-b-input"><input type="radio" id="if-pages-b-input" value="0" name="ifPages"/>否</label>
+                                            </div>
+                                        </div>
+
+                                        <div id="request-param-div">
+
+                                            <div id="request-param-table" style="display: none;">
+                                                <input type="hidden" id="request-param-num" value="0"/>
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>
+                                                            序号
+                                                        </th>
+                                                        <th>
+                                                            中文名
+                                                        </th>
+                                                        <th>
+                                                            英文名
+                                                        </th>
+                                                        <th>
+                                                            参数类型
+                                                        </th>
+                                                        <th>
+                                                            是否必传
+                                                        </th>
+                                                        <th>
+                                                            注释
+                                                        </th>
+                                                        <th>
+                                                            父节点
+                                                        </th>
+                                                        <th>
+                                                            操作
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="request-param-table-tbody">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <button class="btn btn-default" type="button" onclick="newParam()">
+                                                新建入参
+                                            </button>
+                                            <div id="request-param-form">
+                                                <!--<span>中文名称：</span><input type="text" id="param-input-1" name="params[0].paramTitle"/><br/>-->
+                                                <!--<span>英文名称：</span><input type="text" id="param-input-2" name="params[0].paramName"/><br/>-->
+                                                <!--<span>类型：</span>-->
+                                                <!--<label for="request-method-a-input-a"><input type="radio" id="request-method-a-input-a" value="String" name="params[0].paramType"/>String</label>-->
+                                                <!--<label for="request-method-b-input-b"><input type="radio" id="request-method-b-input-b" value="int" name="params[0].paramType"/>int</label><br/>-->
+                                                <!--<span>是否必传：</span>-->
+                                                <!--<label for="request-method-a-input-c"><input type="radio" id="request-method-a-input-c" value="1" name="params[0].ifMust"/>是</label>-->
+                                                <!--<label for="request-method-b-input-d"><input type="radio" id="request-method-b-input-d" value="0" name="params[0].ifMust"/>否</label><br/>-->
+                                                <!--<span>注释：</span><input type="text" id="param-input-5" name="params[0].paramComment"/><br/>-->
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <!--<div class="col-md-8 column" id="left-list"></div>-->
                 <!-- 左半列表end -->
-                <div class="col-md-4 column">
-
-                </div>
+                <!--<div class="col-md-4 column">-->
+                    <!--<span>接口名称：</span><span id="api-name"></span><br/>-->
+                    <!--<span>接口访问路径：</span><span id="api-base-path"></span><br/>-->
+                    <!--<span>接口方法名：</span><span id="api-method"></span><br/>-->
+                    <!--<span>作用注释：</span><span id="api-comment"></span><br/>-->
+                    <!--<span>请求方法：</span><span id="request-method"></span><br/>-->
+                    <!--<span>数据库操作：</span><span id="data-operation"></span><br/>-->
+                    <!--<span>是否报错回滚：</span><span id="if-rollback"></span><br/>-->
+                    <!--<span>是否分页：</span><span id="if-pages"></span><br/>-->
+                    <!--<span>请求参数：</span><span id="request-param"></span><br/>-->
+                        <!--<span>中文名称</span>-->
+                        <!--<span>英文名称</span>-->
+                        <!--<span>类型</span>-->
+                        <!--<span>是否必传</span>-->
+                        <!--<span>注释</span><br/>-->
+                    <!--<span>输出参数：</span><span id="response-param"></span><br/>-->
+                        <!--<span>中文名称</span>-->
+                        <!--<span>英文名称</span>-->
+                        <!--<span>类型</span>-->
+                        <!--<span>是否必传</span>-->
+                        <!--<span>注释</span><br/>-->
+                <!--</div>-->
             </div>
         </div>
     </div>
@@ -266,5 +400,149 @@
 <script src="http://localhost:8080/jquery/jquery-3.2.1.min.js"></script>
 <script src="http://localhost:8080/bootstrap/js/bootstrap.min.js"></script>
 <script src="http://localhost:8080/jquery/jquery.tagsinput.js"></script>
+<script>
+
+    function setDataOperation(v){
+        if(v == "select"){
+            $("#ifPages-input-div").show();
+            $("#ifRollback-input-div").hide();
+        }else{
+            $("#ifPages-input-div").hide();
+            $("#ifRollback-input-div").show();
+        }
+    }
+    function newParam(){
+        var index = $("#request-param-num").val();
+
+        var paramsStr =
+        '<span class="text-title">中文名称：</span><input type="text" id="param-input-paramTitle" name="params['+index+'].paramTitle"/><br/>' +
+        '<span class="text-title">英文名称：</span><input type="text" id="param-input-paramName" name="params['+index+'].paramName"/><br/>' +
+        '<span class="text-title">类型：</span>' +
+        '<label for="param-input-paramType-a"><input type="radio" id="param-input-paramType-a" value="String" name="params['+index+'].paramType"/>String</label>' +
+        '<label for="param-input-paramType-b"><input type="radio" id="param-input-paramType-b" value="int" name="params['+index+'].paramType"/>int</label>' +
+        '<label for="param-input-paramType-c"><input type="radio" id="param-input-paramType-c" value="Map" name="params['+index+'].paramType"/>Map</label>' +
+        '<label for="param-input-paramType-d"><input type="radio" id="param-input-paramType-d" value="List&lt;Map&gt;" name="params['+index+'].paramType"/>List&lt;Map&gt;</label>' +
+        '<label for="param-input-paramType-e"><input type="radio" id="param-input-paramType-e" value="List&lt;String&gt;" name="params['+index+'].paramType"/>List&lt;String&gt;</label>' +
+        '<label for="param-input-paramType-f"><input type="radio" id="param-input-paramType-f" value="List&lt;Integer&gt;" name="params['+index+'].paramType"/>List&lt;Integer&gt;</label><br/>' +
+        '<span class="text-title">是否必传：</span>' +
+        '<label for="param-input-ifMust-a"><input type="radio" id="param-input-ifMust-a" value="T" name="params['+index+'].ifMust"/>是</label>' +
+        '<label for="param-input-ifMust-b"><input type="radio" id="param-input-ifMust-b" value="F" name="params['+index+'].ifMust"/>否</label><br/>' +
+        '<span class="text-title">注释：</span><input type="text" id="param-input-paramComment" name="params['+index+'].paramComment"/><br/>' +
+
+//        '<span class="text-title">有无父节点：</span>' +
+//        '<label for="param-input-have-father-a"><input type="radio" id="param-input-have-father-a" value="no" name="params['+index+'].haveSon"/>无</label>' +
+//        '<label for="param-input-have-father-b"><input type="radio" id="param-input-have-father-b" value="yes" name="params['+index+'].haveSon"/>有</label><br/>' +
+        '<span class="text-title">父英文名：</span><input type="text" id="param-input-father-name" name="params['+index+'].fatherName"/><br/>' +
+        '<button class="btn btn-default" type="button" onclick="saveInputParam()">提交参数</button>';
+
+        $("#request-param-form").html(paramsStr);
+    }
+
+    function saveInputParam(){
+        var clas = ["","success","warning","info"];
+        var index = $("#request-param-num").val();
+        if($("input[name='params["+index+"].paramTitle']").val() == null || $("input[name='params["+index+"].paramTitle']").val().trim() == ""){
+            alert("中文名为空!");return;
+        }
+        if($("input[name='params["+index+"].paramName']").val() == null || $("input[name='params["+index+"].paramName']").val().trim() == ""){
+            alert("英文名为空!");return;
+        }
+        if($("input[name='params["+index+"].paramType']:checked").val() == null){
+            alert("参数类型为空!");return;
+        }
+        if($("input[name='params["+index+"].ifMust']:checked").val() == null){
+            alert("是否必传为空!");return;
+        }
+        var num = Number(index) + 1;
+        var tbody = $("#request-param-table-tbody").html();
+        tbody += '<tr class="'+clas[index%4]+'" id="input-param-'+num+'">'+
+            '<input type="hidden" name="params['+index+'].paramTitle" value="'+$("input[name='params["+index+"].paramTitle']").val()+'">' +
+            '<input type="hidden" name="params['+index+'].paramName" value="'+$("input[name='params["+index+"].paramName']").val()+'">' +
+            '<input type="hidden" name="params['+index+'].paramType" value="'+$("input[name='params["+index+"].paramType']:checked").val()+'">' +
+            '<input type="hidden" name="params['+index+'].ifMust" value="'+$("input[name='params["+index+"].ifMust']:checked").val()+'">' +
+            '<input type="hidden" name="params['+index+'].paramComment" value="'+$("input[name='params["+index+"].paramComment']").val()+'">' +
+            '<input type="hidden" name="params['+index+'].fatherName" value="'+$("input[name='params["+index+"].fatherName']").val()+'">' +
+            '<td>' +
+            num +
+            '</td><td id="params'+index+'-paramTitle" ondblclick="modifyInputParam(&apos;params'+index+'-paramTitle&apos;,'+index+',&apos;paramTitle&apos;)">' +
+            $("input[name='params["+index+"].paramTitle']").val() +
+            '</td><td id="params'+index+'-paramName" ondblclick="modifyInputParam(&apos;params'+index+'-paramName&apos;,'+index+',&apos;paramName&apos;)">' +
+            $("input[name='params["+index+"].paramName']").val() +
+            '</td><td id="params'+index+'-paramType" ondblclick="modifyInputParam(&apos;params'+index+'-paramType&apos;,'+index+',&apos;paramType&apos;)">' +
+            $("input[name='params["+index+"].paramType']:checked").val().replace('<','&lt;').replace('>','&gt;') +
+            '</td><td id="params'+index+'-ifMust" ondblclick="modifyInputParam(&apos;params'+index+'-ifMust&apos;,'+index+',&apos;ifMust&apos;)">' +
+            $("input[name='params["+index+"].ifMust']:checked").val() +
+            '</td><td id="params'+index+'-paramComment" ondblclick="modifyInputParam(&apos;params'+index+'-paramComment&apos;,'+index+',&apos;paramComment&apos;)">' +
+            $("input[name='params["+index+"].paramComment']").val() +
+            '</td><td id="params'+index+'-fatherName" ondblclick="modifyInputParam(&apos;params'+index+'-fatherName&apos;,'+index+',&apos;fatherName&apos;)">' +
+            $("input[name='params["+index+"].fatherName']").val() +
+            '</td><td>' +
+            '<button class="btn btn-default" type="button">删除</button></td></tr>';
+        $("#request-param-table-tbody").html(tbody);
+        index++;
+        $("#request-param-num").val(index);
+        $("#request-param-form").html("");
+        if(index > 0){$("#request-param-table").show();}
+    }
+
+    function modifyInputParam(id,index,name){
+        var haha = "#"+id;
+        var v = $(haha).text();
+        var str = '<input id="'+id+'-text" onBlur="inputTextBlur(&apos;'+id+'&apos;,'+index+',&apos;'+name+'&apos;)" type="text" value="'+v+'"/>';
+        $(haha).html(str);
+        $(haha+'-text').focus();
+    }
+    function inputTextBlur(id,index,name){
+        var haha = "#"+id;
+        var xixi = haha + '-text';
+        if($(xixi).val() == null || $(xixi).val().trim() == ""){
+            $(haha).text($("input[name='params["+index+"]."+name+"']").val());
+        }
+        $(haha).text($(xixi).val());
+        $("input[name='params["+index+"]."+name+"']").val($(haha).text());
+    }
+
+    function saveApi(){
+        if($("#api-name-input").val() == null || $("#api-name-input").val().trim() == ""){
+            alert("接口名称为空!");return;
+        }
+        if($("#api-base-path-input").val() == null || $("#api-base-path-input").val().trim() == ""){
+            alert("接口访问路径为空!");return;
+        }
+        if($("#api-method-input").val() == null || $("#api-method-input").val().trim() == ""){
+            alert("接口方法名为空!");return;
+        }
+        if($("#api-comment-input").val() == null || $("#api-comment-input").val().trim() == ""){
+            alert("作用注释为空!");return;
+        }
+        if($("input[name='requestMethod']:checked").val() == null || $("input[name='requestMethod']:checked").val().trim() == ""){
+            alert("请求方法为空!");return;
+        }
+        if($("input[name='dataOperation']:checked").val() == null || $("input[name='dataOperation']:checked").val().trim() == ""){
+            alert("数据库操作为空!");return;
+        }
+        if($("input[name='dataOperation']:checked").val() == "select"){
+            if($("input[name='ifPages']:checked").val() == null || $("input[name='ifPages']:checked").val().trim() == ""){
+                alert("是否分页为空!");return;
+            }
+        }else{
+            if($("input[name='ifRollback']:checked").val() == null || $("input[name='ifRollback']:checked").val().trim() == ""){
+                alert("是否报错回滚为空!");return;
+            }
+        }
+//        $("#apiForm").submit();
+        $.ajax({
+            type: "post",
+//            url: "/templet/newApi",
+            url: "/templet/newApi",
+            data: $('#apiForm').serialize(),
+            success: function (result) {
+                alert(result.message);
+                window.location.href="http://localhost:8080/controller.html";
+            }
+        });
+    }
+
+</script>
 </body>
 </html>

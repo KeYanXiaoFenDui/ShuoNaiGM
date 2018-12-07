@@ -30,4 +30,14 @@ public class ApiServiceImpl implements IApiService {
     public Api getApi(int id) {
         return apiMapper.getApi(id);
     }
+
+    @Override
+    public int getSeq() {
+        return apiMapper.getSeq();
+    }
+
+    @Override
+    public int updateSeq(int row) {
+        return apiMapper.updateSeq(row);
+    }
 }

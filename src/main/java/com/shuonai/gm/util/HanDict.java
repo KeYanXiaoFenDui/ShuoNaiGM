@@ -230,7 +230,7 @@ public class HanDict {
 		System.out.println(ch + "的笔画数为　　　　　：" + HanDict.getBH(ch).length());
 		System.out.println();
 
-		String str = "今年的收入为123万。";
+		String str = "北京房地产三二一有限公司";
 		System.out.println(str + " 的拼音（中式）为：" + getPY(str, true));
 		System.out.println(str + " 的拼音（英式）为：" + getPY(str, false));
 	}

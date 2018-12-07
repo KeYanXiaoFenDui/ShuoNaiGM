@@ -19,4 +19,10 @@ public interface ApiMapper {
     @Select("select * from api where id=#{id}")
     public Api getApi(int id);
 
+    @Select("select seq from seq where id = 1")
+    public int getSeq();
+
+    @Update("update seq set seq = #{row}")
+    public int updateSeq(int row);
+
 }

@@ -1,10 +1,12 @@
 package com.shuonai.gm.controller;
 
+import com.github.pagehelper.PageHelper;
 import com.shuonai.gm.domain.ParamRelation;
 import com.shuonai.gm.domain.TableParam;
 import com.shuonai.gm.service.IParamRelationService;
 import com.shuonai.gm.service.ITableParamService;
 import com.shuonai.gm.util.CommonUtil;
+import com.shuonai.gm.util.PageBean;
 import com.shuonai.gm.util.ShangXianUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -104,6 +106,7 @@ public class TableParamController {
         int status = 0;
         String message = "";
         String tables = getStr(request.getParameter("tables"),"");
+        PageHelper.startPage(Integer.parseInt(CommonUtil.getStr(request.getParameter("pageNum"), "1")), Integer.parseInt(CommonUtil.getStr(request.getParameter("pageSize"), "10")));//第几页,,,每页多少条记录
         List<Map> tableList = new ArrayList<Map>();
         if(tables.equals("")){
             tableList = tableParamService.getTableList();
@@ -122,7 +125,12 @@ public class TableParamController {
 //            tableList = tableParamService.getTableListByNames(sb.toString());//查询有关联的表
             tableList = tableParamService.getTableList();
         }
+        PageBean<Map> page = new PageBean<Map>(tableList);
         resultMap.put("tableListJson",tableList);
+        resultMap.put("status",status);
+        resultMap.put("message",message);
+        resultMap.put("data",page);
+
         return  resultMap;
     }
 

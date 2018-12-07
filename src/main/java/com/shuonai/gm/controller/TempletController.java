@@ -13,6 +13,7 @@ import com.shuonai.gm.util.JsonTool;
 import com.shuonai.gm.util.PageBean;
 import com.shuonai.gm.util.ShangXianUtil;
 import com.shuonai.gm.util.constant.MessageConstant;
+import jxl.Sheet;
 import jxl.Workbook;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
@@ -24,16 +25,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Admininstrator on 2018/11/5.
@@ -109,11 +108,13 @@ public class TempletController {
     /**
      *
      */
+    @ResponseBody
     @RequestMapping(value = "/newApi")
     public HashMap<String,Object> newApi(HttpServletRequest request,ApiObjectVo apiObjectVo) {
         int status = MessageConstant.ERROR_CODE;
         String message = MessageConstant.ERROR_INFO_DEMO;
-        HashMap<String,Object> data = new HashMap<>();
+        Map<String,Object> data = new HashMap<>();
+        Map<String,Object> data2 = new HashMap<>();
         try {
             StringBuffer sb = new StringBuffer();
 
@@ -143,6 +144,30 @@ public class TempletController {
             apiService.insertApi(api);
 
             List<ParamObjectVo> params = apiObjectVo.getParams();
+            List<ParamObjectVo> paramso = apiObjectVo.getParamso();
+            if(paramso != null && paramso.size() > 0){
+                for (ParamObjectVo param : paramso){
+                    String paramTitle = param.getParamTitle();
+                    String paramName = param.getParamName();
+                    String paramType = param.getParamType();
+                    String ifMust = param.getIfMust();
+                    String paramComment = param.getParamComment();
+
+                    ApiParam apiParam = new ApiParam();
+                    apiParam.setApiId(api.getId());
+                    apiParam.setParamInOutType(2);
+                    apiParam.setParentId(0);
+                    apiParam.setParamTitle(paramTitle);
+                    apiParam.setParamName(paramName);
+                    apiParam.setParamType(paramType);
+                    apiParam.setIfMust(ifMust);
+                    apiParam.setParamComment(paramComment);
+                    apiParam.setCreateTime(date);
+                    apiParam.setUpdateTime(date);
+                    apiParam.setStatus(1);
+                    apiParamService.insertApiParam(apiParam);
+                }
+            }
             sb.append("/**\n");
             sb.append("*"+apiName+"\n");
             if(apiComment != null && !apiComment.equals("")){
@@ -158,69 +183,80 @@ public class TempletController {
             sb.append("\tString message = MessageConstant.ERROR_INFO_DEMO;\n");
             sb.append("\tHashMap<String,Object> data = new HashMap<>();\n");
 
-            for (ParamObjectVo param : params){
-                String paramTitle = param.getParamTitle();
-                String paramName = param.getParamName();
-                String paramType = param.getParamType();
-                String ifMust = param.getIfMust();
-                String paramComment = param.getParamComment();
+            if(ifPages == 1){
+                sb.append("\tPageHelper.startPage(Integer.parseInt(CommonUtil.getStr(request.getParameter(\"pageNum\"), \"1\")), Integer.parseInt(CommonUtil.getStr(request.getParameter(\"pageSize\"), \"10\")));//第几页,,,每页多少条记录\n");
+            }
+            if(params != null && params.size() > 0){
+                for (ParamObjectVo param : params){
+                    String paramTitle = param.getParamTitle();
+                    String paramName = param.getParamName();
+                    String paramType = param.getParamType();
+                    String ifMust = param.getIfMust();
+                    String paramComment = param.getParamComment();
 
-                ApiParam apiParam = new ApiParam();
-                apiParam.setApiId(api.getId());
-                apiParam.setParamTitle(paramTitle);
-                apiParam.setParamName(paramName);
-                apiParam.setParamType(paramType);
-                apiParam.setIfMust(ifMust);
-                apiParam.setParamComment(paramComment);
-                apiParam.setCreateTime(date);
-                apiParam.setUpdateTime(date);
-                apiParam.setStatus(1);
-                apiParamService.insertApiParam(apiParam);
+                    ApiParam apiParam = new ApiParam();
+                    apiParam.setApiId(api.getId());
+                    apiParam.setParamInOutType(1);
+                    apiParam.setParentId(0);
+                    apiParam.setParamTitle(paramTitle);
+                    apiParam.setParamName(paramName);
+                    apiParam.setParamType(paramType);
+                    apiParam.setIfMust(ifMust);
+                    apiParam.setParamComment(paramComment);
+                    apiParam.setCreateTime(date);
+                    apiParam.setUpdateTime(date);
+                    apiParam.setStatus(1);
+                    apiParamService.insertApiParam(apiParam);
 
-                if(paramComment != null && !paramComment.trim().equals("")){
-                    sb.append("\t//"+paramTitle+"\t"+paramComment+"\n");
-                }
-                if(paramType != null && paramType.equals("String")){
-                    //String 类型参数
-                    sb.append("\tString "+paramName+" = CommonUtil.getStr(request.getParameter(\""+paramName+"\"),\"\");\n");
-                    if(ifMust != null && ifMust.equals("T")){
-                        sb.append("\tif("+paramName+" == null || "+paramName+".equals(\"\")){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
+                    if(paramComment != null && !paramComment.trim().equals("")){
+                        sb.append("\t//"+paramTitle+"\t"+paramComment+"\n");
                     }
-                }else if(paramType != null && paramType.equals("int")){
-                    //int 类型参数
-                    sb.append("\tint "+paramName+" = Integer.parseInt(CommonUtil.getStr(request.getParameter(\""+paramName+"\"),\"-500\"));\n");
-                    if(ifMust != null && ifMust.equals("T")){
-                        sb.append("\tif("+paramName+" == -500){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
-                    }
-                }else if(paramType != null && paramType.equals("Map")){
-                    //Map 类型参数
-                    sb.append("\tMap "+paramName+" = (Map)request.getParameter(\""+paramName+"\");\n");
-                    if(ifMust != null && ifMust.equals("T")){
-                        sb.append("\tif("+paramName+" == null){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
-                    }
-                }else if(paramType != null && paramType.equals("List<Map>")){
-                    //List<Map> 类型参数
-                    sb.append("\tList<Map> "+paramName+" = (List<Map>)request.getParameter(\""+paramName+"\");\n");
-                    if(ifMust != null && ifMust.equals("T")){
-                        sb.append("\tif("+paramName+" == null){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
-                    }
-                }else if(paramType != null && paramType.equals("List<String>")){
-                    //List<String> 类型参数
-                    sb.append("\tList<String> "+paramName+" = (List<String>)request.getParameter(\""+paramName+"\");\n");
-                    if(ifMust != null && ifMust.equals("T")){
-                        sb.append("\tif("+paramName+" == null){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
-                    }
-                }else if(paramType != null && paramType.equals("List<Integer>")){
-                    //List<Integer> 类型参数
-                    sb.append("\tList<Integer> "+paramName+" = (List<Integer>)request.getParameter(\""+paramName+"\");\n");
-                    if(ifMust != null && ifMust.equals("T")){
-                        sb.append("\tif("+paramName+" == null){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
+                    if(paramType != null && paramType.equals("String")){
+                        //String 类型参数
+                        sb.append("\tString "+paramName+" = CommonUtil.getStr(request.getParameter(\""+paramName+"\"),\"\");\n");
+                        if(ifMust != null && ifMust.equals("T")){
+                            sb.append("\tif("+paramName+" == null || "+paramName+".equals(\"\")){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
+                        }
+                    }else if(paramType != null && paramType.equals("int")){
+                        //int 类型参数
+                        sb.append("\tint "+paramName+" = Integer.parseInt(CommonUtil.getStr(request.getParameter(\""+paramName+"\"),\"-500\"));\n");
+                        if(ifMust != null && ifMust.equals("T")){
+                            sb.append("\tif("+paramName+" == -500){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
+                        }
+                    }else if(paramType != null && paramType.equals("Map")){
+                        //Map 类型参数
+                        sb.append("\tMap "+paramName+" = (Map)request.getParameter(\""+paramName+"\");\n");
+                        if(ifMust != null && ifMust.equals("T")){
+                            sb.append("\tif("+paramName+" == null){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
+                        }
+                    }else if(paramType != null && paramType.equals("List<Map>")){
+                        //List<Map> 类型参数
+                        sb.append("\tList<Map> "+paramName+" = (List<Map>)request.getParameter(\""+paramName+"\");\n");
+                        if(ifMust != null && ifMust.equals("T")){
+                            sb.append("\tif("+paramName+" == null){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
+                        }
+                    }else if(paramType != null && paramType.equals("List<String>")){
+                        //List<String> 类型参数
+                        sb.append("\tList<String> "+paramName+" = (List<String>)request.getParameter(\""+paramName+"\");\n");
+                        if(ifMust != null && ifMust.equals("T")){
+                            sb.append("\tif("+paramName+" == null){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
+                        }
+                    }else if(paramType != null && paramType.equals("List<Integer>")){
+                        //List<Integer> 类型参数
+                        sb.append("\tList<Integer> "+paramName+" = (List<Integer>)request.getParameter(\""+paramName+"\");\n");
+                        if(ifMust != null && ifMust.equals("T")){
+                            sb.append("\tif("+paramName+" == null){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
+                        }
                     }
                 }
             }
 
             if(ifRollback != 0 && ifRollback == 1) {//回滚
                 sb.append("\ttry {\n");
+            }
+
+            if(ifPages == 1){
+                sb.append("\tPageBean<Map> list = new PageBean<Map>(resultList);\n");
             }
 
             if(ifRollback != 0 && ifRollback == 1) {//回滚
@@ -234,8 +270,22 @@ public class TempletController {
             sb.append("}\n");
             System.out.println(sb.toString());
 
-            ShangXianUtil.writeToTxt("api.txt","D:\\桌面文件",sb.toString());
-            exportExcel(apiObjectVo);
+//            ShangXianUtil.writeToTxt("api.txt","D:\\桌面文件",sb.toString());
+            ShangXianUtil.fileChaseFW("D:\\桌面文件\\api.txt",sb.toString());
+
+            JSONObject jsonInputParams = null;
+            if (requestMethod.equals("post")){
+                data2 = inputParamssJsonTree(apiObjectVo);
+                jsonInputParams = JSONObject.fromObject(data2);
+                System.out.println("jsonInput:"+jsonInputParams.toString());
+            }
+
+            data = outputParamssJsonTree(apiObjectVo);
+            JSONObject json = JSONObject.fromObject(CommonUtil.ToResultHashMap(status,message,data));
+            System.out.println("jsonOutput:"+json.toString());
+
+            exportExcel(apiObjectVo,json,jsonInputParams);
+
 //            String apiName = CommonUtil.getStr(request.getParameter("apiName"),"");
 //            String apiUrl = CommonUtil.getStr(request.getParameter("apiUrl"),"");
 //            String apiComment = CommonUtil.getStr(request.getParameter("apiComment"),"");
@@ -269,42 +319,190 @@ public class TempletController {
     }
 
 
-    public static void exportExcel(ApiObjectVo apiObjectVo) {
-        WritableWorkbook book = null;
+    public void exportExcel(ApiObjectVo apiObjectVo,JSONObject json,JSONObject jsonInput) {
+//        WritableWorkbook book = null;
+//            Workbook book = null;
+        WritableWorkbook wbook = null;
+        WritableSheet sh = null;
         try {
-            book = Workbook.createWorkbook(new File(OutputPath_uk));
-            WritableSheet sheet = book.createSheet("Api", 0);
-            // 指定单元格位置是第一列第一行(0, 0)
-
-            sheet.addCell(new Label(0, 0, "接口名称:"));
-            sheet.addCell(new Label(1, 0, apiObjectVo.getApiName()));
-
-            sheet.addCell(new Label(0, 1, "接口地址:"));
-            sheet.addCell(new Label(1, 1, apiObjectVo.getApiMethod()));
-
-            sheet.addCell(new Label(0, 2, "请求方法:"));
-            sheet.addCell(new Label(1, 2, apiObjectVo.getRequestMethod()));
-
-            sheet.addCell(new Label(0, 3, "请求参数说明:"));
-            //序号	字段	名称	必填	数据类型	说明
-            sheet.addCell(new Label(1, 3, "序号"));
-            sheet.addCell(new Label(2, 3, "字段"));
-            sheet.addCell(new Label(3, 3, "名称"));
-            sheet.addCell(new Label(4, 3, "必填"));
-            sheet.addCell(new Label(5, 3, "数据类型"));
-            sheet.addCell(new Label(6, 3, "说明"));
-            List<ParamObjectVo> params = apiObjectVo.getParams();
-            int num = 1;
-            for (ParamObjectVo param : params){
-                sheet.addCell(new Label(1, num+3, CommonUtil.getStr(num,"0")));//序号
-                sheet.addCell(new Label(2, num+3, param.getParamName()));//字段
-                sheet.addCell(new Label(3, num+3, param.getParamTitle()));//名称
-                sheet.addCell(new Label(4, num+3, param.getIfMust()));//必填
-                sheet.addCell(new Label(5, num+3, param.getParamType()));//数据类型
-                sheet.addCell(new Label(6, num+3, CommonUtil.getStr(param.getParamComment(),"")));//说明
-                num++;
+            File file = new File(OutputPath_uk);
+            if(!file.exists()){
+                //-----------新建start-----------------
+                wbook = Workbook.createWorkbook(file);
+                wbook.setProtected(true);
+                // -- 第一个参数是Sheet名，第二个参数是Sheet下标
+                // -- 下标是整数，只起标识作用，建立的时候会以create顺序建立，本例生成的EXCEL文件第一个Sheet是sheet1
+                sh = wbook.createSheet("第一页", 1);
+                //-----------新建end-----------------
+            }else{
+                //-----------追加start---------------
+                Workbook book = Workbook.getWorkbook(file);
+                Sheet sheet = book.getSheet(0);
+                // 获取行
+                int length = sheet.getRows();
+                wbook = Workbook.createWorkbook(file, book); // 根据book创建一个操作对象
+                sh = wbook.getSheet(0);// 得到一个工作对象
+                //-----------追加end---------------
             }
 
+
+
+            int row = apiService.getSeq();
+            sh.addCell(new Label(0, row, "接口名称:"));
+            sh.addCell(new Label(1, row, apiObjectVo.getApiName()));
+            row++;
+
+            sh.addCell(new Label(0, row, "接口地址:"));
+            sh.addCell(new Label(1, row, apiObjectVo.getApiMethod()));
+            row++;
+
+            sh.addCell(new Label(0, row, "请求前缀:"));
+            sh.addCell(new Label(1, row, "/api/business"+apiObjectVo.getApiBasePath()));
+            row++;
+
+            sh.addCell(new Label(0, row, "请求方法:"));
+            sh.addCell(new Label(1, row, apiObjectVo.getRequestMethod()));
+            row++;
+
+            sh.addCell(new Label(0, row, "请求参数说明:"));
+            //序号	字段	名称	必填	数据类型	说明
+            sh.addCell(new Label(1, row, "序号"));
+            sh.addCell(new Label(2, row, "字段"));
+            sh.addCell(new Label(3, row, "名称"));
+            sh.addCell(new Label(4, row, "必填"));
+            sh.addCell(new Label(5, row, "数据类型"));
+            sh.addCell(new Label(6, row, "说明"));
+            row++;
+            int num = 1;
+            int ifPages = Integer.parseInt(CommonUtil.getStr(apiObjectVo.getIfPages(),"0"));
+            if(ifPages == 1){
+                sh.addCell(new Label(1, row, "1"));
+                sh.addCell(new Label(2, row, "pageNum"));
+                sh.addCell(new Label(3, row, "页码"));
+                sh.addCell(new Label(4, row, "F"));
+                sh.addCell(new Label(5, row, "int"));
+                sh.addCell(new Label(6, row, "默认为1"));
+                row++;num++;
+                sh.addCell(new Label(1, row, "2"));
+                sh.addCell(new Label(2, row, "pageSize"));
+                sh.addCell(new Label(3, row, "每页长度"));
+                sh.addCell(new Label(4, row, "F"));
+                sh.addCell(new Label(5, row, "int"));
+                sh.addCell(new Label(6, row, "默认为10"));
+                row++;num++;
+            }
+            List<ParamObjectVo> params = apiObjectVo.getParams();
+            if(params != null && params.size() > 0){
+                for (ParamObjectVo param : params){
+                    sh.addCell(new Label(1, row, CommonUtil.getStr(num,"0")));//序号
+                    sh.addCell(new Label(2, row, param.getParamName()));//字段
+                    sh.addCell(new Label(3, row, param.getParamTitle()));//名称
+                    sh.addCell(new Label(4, row, param.getIfMust()));//必填
+                    sh.addCell(new Label(5, row, param.getParamType()));//数据类型
+                    sh.addCell(new Label(6, row, CommonUtil.getStr(param.getParamComment(),"")));//说明
+                    row++;num++;
+                }
+                if(CommonUtil.getStr(apiObjectVo.getRequestMethod(),"").equals("post")){
+                    sh.addCell(new Label(0, row, "返回参数示例："));
+                    sh.addCell(new Label(1, row, jsonInput.toString()));
+                    row++;
+                }
+            }
+
+            sh.addCell(new Label(0, row, "输出参数说明:"));
+            //序号	字段	名称	必填	数据类型	说明
+            sh.addCell(new Label(1, row, "序号"));
+            sh.addCell(new Label(2, row, "字段"));
+            sh.addCell(new Label(3, row, "名称"));
+            sh.addCell(new Label(4, row, "必填"));
+            sh.addCell(new Label(5, row, "数据类型"));
+            sh.addCell(new Label(6, row, "说明"));
+            row++;
+            sh.addCell(new Label(1, row, "1"));
+            sh.addCell(new Label(2, row, "status"));
+            sh.addCell(new Label(3, row, "状态码"));
+            sh.addCell(new Label(4, row, "T"));
+            sh.addCell(new Label(5, row, "int"));
+            sh.addCell(new Label(6, row, "1为成功,其它为失败"));
+            row++;
+            sh.addCell(new Label(1, row, "2"));
+            sh.addCell(new Label(2, row, "message"));
+            sh.addCell(new Label(3, row, "返回信息"));
+            sh.addCell(new Label(4, row, "T"));
+            sh.addCell(new Label(5, row, "String"));
+            sh.addCell(new Label(6, row, ""));
+            row++;
+            sh.addCell(new Label(1, row, "3"));
+            sh.addCell(new Label(2, row, "data"));
+            sh.addCell(new Label(3, row, "返回数据集"));
+            sh.addCell(new Label(4, row, "T"));
+            sh.addCell(new Label(5, row, "Map"));
+            sh.addCell(new Label(6, row, ""));
+            row++;
+            int index = 4;
+            if(ifPages == 1){
+                sh.addCell(new Label(1, row, "4"));
+                sh.addCell(new Label(2, row, "total"));
+                sh.addCell(new Label(3, row, "数据总条数"));
+                sh.addCell(new Label(4, row, "T"));
+                sh.addCell(new Label(5, row, "int"));
+                sh.addCell(new Label(6, row, ""));
+                row++;
+                sh.addCell(new Label(1, row, "5"));
+                sh.addCell(new Label(2, row, "pageNum"));
+                sh.addCell(new Label(3, row, "页码"));
+                sh.addCell(new Label(4, row, "T"));
+                sh.addCell(new Label(5, row, "int"));
+                sh.addCell(new Label(6, row, ""));
+                row++;
+                sh.addCell(new Label(1, row, "6"));
+                sh.addCell(new Label(2, row, "pageSize"));
+                sh.addCell(new Label(3, row, "每页长度"));
+                sh.addCell(new Label(4, row, "T"));
+                sh.addCell(new Label(5, row, "int"));
+                sh.addCell(new Label(6, row, ""));
+                row++;
+                sh.addCell(new Label(1, row, "7"));
+                sh.addCell(new Label(2, row, "pages"));
+                sh.addCell(new Label(3, row, "共几页"));
+                sh.addCell(new Label(4, row, "T"));
+                sh.addCell(new Label(5, row, "int"));
+                sh.addCell(new Label(6, row, ""));
+                row++;
+                sh.addCell(new Label(1, row, "8"));
+                sh.addCell(new Label(2, row, "size"));
+                sh.addCell(new Label(3, row, "当页数据数"));
+                sh.addCell(new Label(4, row, "T"));
+                sh.addCell(new Label(5, row, "int"));
+                sh.addCell(new Label(6, row, ""));
+                row++;
+                sh.addCell(new Label(1, row, "9"));
+                sh.addCell(new Label(2, row, "list"));
+                sh.addCell(new Label(3, row, "数据列表集合"));
+                sh.addCell(new Label(4, row, "T"));
+                sh.addCell(new Label(5, row, "list<Map>"));
+                sh.addCell(new Label(6, row, ""));
+                row++;
+                index = 10;
+            }
+            List<ParamObjectVo> paramso = apiObjectVo.getParamso();
+            if(paramso != null && paramso.size() > 0) {
+                for (ParamObjectVo param : paramso) {
+                    sh.addCell(new Label(1, row, CommonUtil.getStr(index, "0")));//序号
+                    sh.addCell(new Label(2, row, param.getParamName()));//字段
+                    sh.addCell(new Label(3, row, param.getParamTitle()));//名称
+                    sh.addCell(new Label(4, row, param.getIfMust()));//必填
+                    sh.addCell(new Label(5, row, param.getParamType()));//数据类型
+                    sh.addCell(new Label(6, row, CommonUtil.getStr(param.getParamComment(), "")));//说明
+                    row++;
+                    index++;
+                }
+                sh.addCell(new Label(0, row, "返回参数示例："));
+                sh.addCell(new Label(1, row, json.toString()));
+                row++;
+                index++;
+            }
+            apiService.updateSeq(++row);
 
 //            sheet.addCell(new Label(2, 0, "价格"));
 //            sheet.addCell(new Label(3, 0, "库存"));
@@ -328,20 +526,166 @@ public class TempletController {
 //            }
 
             // 写入数据并关闭文件
-            book.write();
+//            book.write();
+            wbook.write();
         } catch (Exception e) {
             System.out.println(e);
         }finally{
-            if(book!=null){
+            if(wbook!=null){
                 try {
-                    book.close();
+                    wbook.close();
+//                    book.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
     }
+    public Map<String,Object> inputParamssJsonTree(ApiObjectVo apiObjectVo){
+        List<ParamObjectVo> inputParams = apiObjectVo.getParams();
+        Map<String,Object> data = new HashMap<String,Object>();
+        int ifPages = apiObjectVo.getIfPages();
+        if(ifPages == 1){
+            data.put("pageNum",1);
+            data.put("pageSize",10);
+        }
 
+        Map<String,String> fathersType = new HashMap<String,String>();
+        Map<String,Object> fatherObjects = new HashMap<String,Object>();
+//        fathersType.put("data","Map");
+//        fatherObjects.put("data",new HashMap());
+//        if(ifPages == 1){
+//            fathersType.put("list","List<Map>");
+//            fatherObjects.put("list",new ArrayList<Map>());
+//        }
+
+        //先创建所有父对象,,
+        if(inputParams != null && inputParams.size() > 0){
+            for (ParamObjectVo in : inputParams){
+                String type = in.getParamType();
+                if(type.equals("String")){fatherObjects.put(in.getParamName(),"");fathersType.put(in.getParamName(),in.getParamType());continue;}
+                if(type.equals("int")){fatherObjects.put(in.getParamName(),0);fathersType.put(in.getParamName(),in.getParamType());continue;}
+                if(type.equals("Map")){fatherObjects.put(in.getParamName(),new HashMap());fathersType.put(in.getParamName(),in.getParamType());continue;}
+                if(type.equals("List<Map>")){fatherObjects.put(in.getParamName(),new ArrayList<Map>());fathersType.put(in.getParamName(),in.getParamType());continue;}
+                if(type.equals("List<String>")){fatherObjects.put(in.getParamName(),new ArrayList<String>());fathersType.put(in.getParamName(),in.getParamType());continue;}
+                if(type.equals("List<Integer>")){fatherObjects.put(in.getParamName(),new ArrayList<Integer>());fathersType.put(in.getParamName(),in.getParamType());}
+            }
+        }else{
+            return null;
+        }
+        HashMap tempMap = new HashMap();
+        ArrayList<Map> tempMapList = new ArrayList<Map>();
+//        ArrayList<String> tempStringList = new ArrayList<String>();
+        for (ParamObjectVo in : inputParams){
+            String father = CommonUtil.getStr(in.getFatherName(),"");
+            if(!father.equals("")){
+                String type = fathersType.get(father);
+                if(type.equals("Map")){
+                    tempMap = (HashMap)fatherObjects.get(father);
+                    tempMap.put(in.getParamName(),fatherObjects.get(in.getParamName()));
+                    fatherObjects.put(father,tempMap);
+                }
+                if(type.equals("List<Map>")){
+                    tempMapList = (ArrayList<Map>) fatherObjects.get(father);
+                    if(tempMapList == null || tempMapList.size() == 0){tempMapList.add(new HashMap());}
+                    tempMap = (HashMap) tempMapList.get(0);
+                    tempMap.put(in.getParamName(),fatherObjects.get(in.getParamName()));
+                    tempMapList.remove(0);
+                    tempMapList.add(tempMap);
+                    fatherObjects.put(father,tempMapList);
+                }
+            }else if(father.equals("")){
+                data.put(in.getParamName(),fatherObjects.get(in.getParamName()));
+            }
+        }
+        return data;
+    }
+
+    public Map<String,Object> outputParamssJsonTree(ApiObjectVo apiObjectVo){
+//        List<ParamObjectVo> inputParams = apiObjectVo.getParams();
+        List<ParamObjectVo> outputParams = apiObjectVo.getParamso();
+        Map<String,Object> data = new HashMap<String,Object>();
+        ArrayList<Map> list = new ArrayList<Map>();
+        int ifPages = apiObjectVo.getIfPages();
+//        Map resultMap = new HashMap();
+//        Map data = new HashMap();
+//        List<Map> list = new ArrayList();
+//        resultMap.put("status",0);
+//        resultMap.put("message","接口回调例子");
+//        resultMap.put("data",data);
+        if(ifPages == 1){
+            data.put("total",20);
+            data.put("pageNum",1);
+            data.put("pageSize",10);
+            data.put("pages",2);
+            data.put("size",10);
+//            data.put("list",list);
+        }
+
+        Map<String,String> fathersType = new HashMap<String,String>();
+        Map<String,Object> fatherObjects = new HashMap<String,Object>();
+        fathersType.put("data","Map");
+        fatherObjects.put("data",new HashMap());
+        if(ifPages == 1){
+            fathersType.put("list","List<Map>");
+            fatherObjects.put("list",new ArrayList<Map>());
+        }
+
+        //先创建所有父对象,,
+        if(outputParams != null && outputParams.size() > 0){
+            for (ParamObjectVo out : outputParams){
+                String type = out.getParamType();
+                if(type.equals("String")){fatherObjects.put(out.getParamName(),"");fathersType.put(out.getParamName(),out.getParamType());continue;}
+                if(type.equals("int")){fatherObjects.put(out.getParamName(),0);fathersType.put(out.getParamName(),out.getParamType());continue;}
+                if(type.equals("Map")){fatherObjects.put(out.getParamName(),new HashMap());fathersType.put(out.getParamName(),out.getParamType());continue;}
+                if(type.equals("List<Map>")){fatherObjects.put(out.getParamName(),new ArrayList<Map>());fathersType.put(out.getParamName(),out.getParamType());continue;}
+                if(type.equals("List<String>")){fatherObjects.put(out.getParamName(),new ArrayList<String>());fathersType.put(out.getParamName(),out.getParamType());continue;}
+                if(type.equals("List<Integer>")){fatherObjects.put(out.getParamName(),new ArrayList<Integer>());fathersType.put(out.getParamName(),out.getParamType());}
+            }
+        }else{
+            return null;
+        }
+        HashMap tempMap = new HashMap();
+        ArrayList<Map> tempMapList = new ArrayList<Map>();
+//        ArrayList<String> tempStringList = new ArrayList<String>();
+        for (ParamObjectVo out : outputParams){
+            String father = CommonUtil.getStr(out.getFatherName(),"");
+            if(!father.equals("")){
+                String type = fathersType.get(father);
+                if(type.equals("Map")){
+                    tempMap = (HashMap)fatherObjects.get(father);
+                    tempMap.put(out.getParamName(),fatherObjects.get(out.getParamName()));
+                    fatherObjects.put(father,tempMap);
+                }
+                if(type.equals("List<Map>")){
+                    tempMapList = (ArrayList<Map>) fatherObjects.get(father);
+                    if(tempMapList == null || tempMapList.size() == 0){tempMapList.add(new HashMap());}
+                    tempMap = (HashMap) tempMapList.get(0);
+                    tempMap.put(out.getParamName(),fatherObjects.get(out.getParamName()));
+                    tempMapList.remove(0);
+                    tempMapList.add(tempMap);
+                    fatherObjects.put(father,tempMapList);
+                }
+                if(father.equals("data")){
+                    data.put(out.getParamName(),fatherObjects.get(out.getParamName()));
+                }
+                if(father.equals("list")){
+                    list = (ArrayList<Map>) fatherObjects.get(father);
+                    if(list == null || list.size() == 0){list.add(new HashMap());}
+                    tempMap = (HashMap) list.get(0);
+                    tempMap.put(out.getParamName(),fatherObjects.get(out.getParamName()));
+                    list.remove(0);
+                    list.add(tempMap);
+                    fatherObjects.put(father,list);
+                }
+            }
+        }
+        if(ifPages == 1){
+            data.put("list",list);
+        }
+        System.out.println(data.toString());
+        return data;
+    }
 
     private String getStringFromStream(HttpServletRequest req) {
         ServletInputStream is;

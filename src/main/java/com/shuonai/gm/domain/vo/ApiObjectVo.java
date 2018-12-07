@@ -15,6 +15,7 @@ public class ApiObjectVo {
     private int ifRollback;//是否报错回滚
     private int ifPages;//是否分页
     private List<ParamObjectVo> params;//入参
+    private List<ParamObjectVo> paramso;//入参
 
     public String getApiName() {
         return apiName;
@@ -88,6 +89,14 @@ public class ApiObjectVo {
         this.params = params;
     }
 
+    public List<ParamObjectVo> getParamso() {
+        return paramso;
+    }
+
+    public void setParamso(List<ParamObjectVo> paramso) {
+        this.paramso = paramso;
+    }
+
     @Override
     public String toString() {
         return "ApiObjectVo{" +
@@ -100,6 +109,7 @@ public class ApiObjectVo {
                 ", ifRollback=" + ifRollback +
                 ", ifPages=" + ifPages +
                 ", params=" + params +
+                ", paramso=" + paramso +
                 '}';
     }
 }

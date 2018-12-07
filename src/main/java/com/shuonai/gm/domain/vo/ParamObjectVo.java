@@ -9,6 +9,7 @@ public class ParamObjectVo {
     private String paramType;//类型 String int
     private String ifMust;//是否必传 T  F
     private String paramComment;//注释
+    private String fatherName;//父节点名称
 
     public String getParamTitle() {
         return paramTitle;
@@ -50,14 +51,23 @@ public class ParamObjectVo {
         this.paramComment = paramComment;
     }
 
+    public String getFatherName() {
+        return fatherName;
+    }
+
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
+    }
+
     @Override
     public String toString() {
         return "ParamObjectVo{" +
                 "paramTitle='" + paramTitle + '\'' +
                 ", paramName='" + paramName + '\'' +
                 ", paramType='" + paramType + '\'' +
-                ", ifMust=" + ifMust +
+                ", ifMust='" + ifMust + '\'' +
                 ", paramComment='" + paramComment + '\'' +
+                ", fatherName='" + fatherName + '\'' +
                 '}';
     }
 }

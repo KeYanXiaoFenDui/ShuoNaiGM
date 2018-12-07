@@ -314,7 +314,7 @@
                                                     <thead>
                                                     <tr>
                                                         <th>
-                                                            序号
+                                                            入参序号
                                                         </th>
                                                         <th>
                                                             中文名
@@ -343,10 +343,48 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-
-                                            <button class="btn btn-default" type="button" onclick="newParam()">
+                                            <div id="response-param-table" style="display: none;">
+                                                <input type="hidden" id="response-param-num" value="0"/>
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>
+                                                            出参序号
+                                                        </th>
+                                                        <th>
+                                                            中文名
+                                                        </th>
+                                                        <th>
+                                                            英文名
+                                                        </th>
+                                                        <th>
+                                                            参数类型
+                                                        </th>
+                                                        <th>
+                                                            是否必传
+                                                        </th>
+                                                        <th>
+                                                            注释
+                                                        </th>
+                                                        <th>
+                                                            父节点
+                                                        </th>
+                                                        <th>
+                                                            操作
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="response-param-table-tbody">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <button class="btn btn-default" type="button" onclick="newInputParam()">
                                                 新建入参
                                             </button>
+                                            <button class="btn btn-default" type="button" onclick="newOutputParam()">
+                                                新建出参
+                                            </button>
+                                            <input type="hidden" id="request-show-hide" value="hide"/>
                                             <div id="request-param-form">
                                                 <!--<span>中文名称：</span><input type="text" id="param-input-1" name="params[0].paramTitle"/><br/>-->
                                                 <!--<span>英文名称：</span><input type="text" id="param-input-2" name="params[0].paramName"/><br/>-->
@@ -357,6 +395,10 @@
                                                 <!--<label for="request-method-a-input-c"><input type="radio" id="request-method-a-input-c" value="1" name="params[0].ifMust"/>是</label>-->
                                                 <!--<label for="request-method-b-input-d"><input type="radio" id="request-method-b-input-d" value="0" name="params[0].ifMust"/>否</label><br/>-->
                                                 <!--<span>注释：</span><input type="text" id="param-input-5" name="params[0].paramComment"/><br/>-->
+                                            </div>
+                                            <input type="hidden" id="response-show-hide" value="hide"/>
+                                            <div id="response-param-form">
+
                                             </div>
                                         </div>
 
@@ -411,13 +453,15 @@
             $("#ifRollback-input-div").show();
         }
     }
-    function newParam(){
+    function newInputParam(){
+        if($("#request-show-hide").val() == "show"){$("#request-show-hide").val("hide");$("#request-param-form").html("");return;}
+        if($("#request-show-hide").val() == "hide"){$("#request-show-hide").val("show");}
         var index = $("#request-param-num").val();
 
         var paramsStr =
-        '<span class="text-title">中文名称：</span><input type="text" id="param-input-paramTitle" name="params['+index+'].paramTitle"/><br/>' +
-        '<span class="text-title">英文名称：</span><input type="text" id="param-input-paramName" name="params['+index+'].paramName"/><br/>' +
-        '<span class="text-title">类型：</span>' +
+        '<span class="text-title">入参中文名称：</span><input type="text" id="param-input-paramTitle" name="params['+index+'].paramTitle"/><br/>' +
+        '<span class="text-title">入参英文名称：</span><input type="text" id="param-input-paramName" name="params['+index+'].paramName"/><br/>' +
+        '<span class="text-title">入参类型：</span>' +
         '<label for="param-input-paramType-a"><input type="radio" id="param-input-paramType-a" value="String" name="params['+index+'].paramType"/>String</label>' +
         '<label for="param-input-paramType-b"><input type="radio" id="param-input-paramType-b" value="int" name="params['+index+'].paramType"/>int</label>' +
         '<label for="param-input-paramType-c"><input type="radio" id="param-input-paramType-c" value="Map" name="params['+index+'].paramType"/>Map</label>' +
@@ -433,9 +477,48 @@
 //        '<label for="param-input-have-father-a"><input type="radio" id="param-input-have-father-a" value="no" name="params['+index+'].haveSon"/>无</label>' +
 //        '<label for="param-input-have-father-b"><input type="radio" id="param-input-have-father-b" value="yes" name="params['+index+'].haveSon"/>有</label><br/>' +
         '<span class="text-title">父英文名：</span><input type="text" id="param-input-father-name" name="params['+index+'].fatherName"/><br/>' +
-        '<button class="btn btn-default" type="button" onclick="saveInputParam()">提交参数</button>';
+        '<button class="btn btn-default" type="button" onclick="saveInputParam()">提交入参</button>';
 
         $("#request-param-form").html(paramsStr);
+    }
+
+    function newOutputParam(){
+        if($("#response-show-hide").val() == "show"){$("#response-show-hide").val("hide");$("#response-param-form").html("");return;}
+        if($("#response-show-hide").val() == "hide"){$("#response-show-hide").val("show");}
+        var index = $("#response-param-num").val();
+
+        var paramsStr =
+            '<span class="text-title">出参中文名称：</span><input type="text" id="param-output-paramTitle" name="paramso['+index+'].paramTitle"/><br/>' +
+            '<span class="text-title">出参英文名称：</span><input type="text" id="param-output-paramName" name="paramso['+index+'].paramName"/><br/>' +
+            '<span class="text-title">出参类型：</span>' +
+            '<label for="param-output-paramType-a"><input type="radio" id="param-output-paramType-a" value="String" name="paramso['+index+'].paramType"/>String</label>' +
+            '<label for="param-output-paramType-b"><input type="radio" id="param-output-paramType-b" value="int" name="paramso['+index+'].paramType"/>int</label>' +
+            '<label for="param-output-paramType-c"><input type="radio" id="param-output-paramType-c" value="Map" name="paramso['+index+'].paramType"/>Map</label>' +
+            '<label for="param-output-paramType-d"><input type="radio" id="param-output-paramType-d" value="List&lt;Map&gt;" name="paramso['+index+'].paramType"/>List&lt;Map&gt;</label>' +
+            '<label for="param-output-paramType-e"><input type="radio" id="param-output-paramType-e" value="List&lt;String&gt;" name="paramso['+index+'].paramType"/>List&lt;String&gt;</label>' +
+            '<label for="param-output-paramType-f"><input type="radio" id="param-output-paramType-f" value="List&lt;Integer&gt;" name="paramso['+index+'].paramType"/>List&lt;Integer&gt;</label><br/>' +
+            '<span class="text-title">是否必传：</span>' +
+            '<label for="param-output-ifMust-a"><input type="radio" id="param-output-ifMust-a" value="T" name="paramso['+index+'].ifMust"/>是</label>' +
+            '<label for="param-output-ifMust-b"><input type="radio" id="param-output-ifMust-b" value="F" name="paramso['+index+'].ifMust"/>否</label><br/>' +
+            '<span class="text-title">注释：</span><input type="text" id="param-output-paramComment" name="paramso['+index+'].paramComment"/><br/>' +
+
+//        '<span class="text-title">有无父节点：</span>' +
+//        '<label for="param-input-have-father-a"><input type="radio" id="param-input-have-father-a" value="no" name="params['+index+'].haveSon"/>无</label>' +
+//        '<label for="param-input-have-father-b"><input type="radio" id="param-input-have-father-b" value="yes" name="params['+index+'].haveSon"/>有</label><br/>' +
+//            <input type="text" id="param-output-father-name" name="paramso['+index+'].fatherName"/>
+            '<span class="text-title">父英文名：</span><select id="param-output-father-name" name="paramso['+index+'].fatherName"><option value="data">data</option>';
+            if($("input[name='ifPages']:checked").val() == 1){
+                paramsStr += '<option value="list">list</option>';
+            }
+            for(var i=0;index > i;i++){
+                var type = $("input[name='paramso["+i+"].paramType']").val();
+                if(type == 'Map' || type == 'List<Map>'){
+                    paramsStr += '<option value="'+$("input[name='paramso["+i+"].paramName']").val()+'">'+$("input[name='paramso["+i+"].paramName']").val()+'</option>';
+                }
+            }
+            paramsStr += '</select><br/><button class="btn btn-default" type="button" onclick="saveOutputParam()">提交出参</button>';
+
+        $("#response-param-form").html(paramsStr);
     }
 
     function saveInputParam(){
@@ -482,13 +565,68 @@
         index++;
         $("#request-param-num").val(index);
         $("#request-param-form").html("");
+        $("#request-show-hide").val("hide");
         if(index > 0){$("#request-param-table").show();}
+    }
+    function saveOutputParam(){
+        var clas = ["","success","warning","info"];
+        var index = $("#response-param-num").val();
+        if($("input[name='paramso["+index+"].paramTitle']").val() == null || $("input[name='paramso["+index+"].paramTitle']").val().trim() == ""){
+            alert("中文名为空!");return;
+        }
+        if($("input[name='paramso["+index+"].paramName']").val() == null || $("input[name='paramso["+index+"].paramName']").val().trim() == ""){
+            alert("英文名为空!");return;
+        }
+        if($("input[name='paramso["+index+"].paramType']:checked").val() == null){
+            alert("参数类型为空!");return;
+        }
+        if($("input[name='paramso["+index+"].ifMust']:checked").val() == null){
+            alert("是否必传为空!");return;
+        }
+        var num = Number(index) + 1;
+        var tbody = $("#response-param-table-tbody").html();
+        tbody += '<tr class="'+clas[index%4]+'" id="output-param-'+num+'">'+
+            '<input type="hidden" name="paramso['+index+'].paramTitle" value="'+$("input[name='paramso["+index+"].paramTitle']").val()+'">' +
+            '<input type="hidden" name="paramso['+index+'].paramName" value="'+$("input[name='paramso["+index+"].paramName']").val()+'">' +
+            '<input type="hidden" name="paramso['+index+'].paramType" value="'+$("input[name='paramso["+index+"].paramType']:checked").val()+'">' +
+            '<input type="hidden" name="paramso['+index+'].ifMust" value="'+$("input[name='paramso["+index+"].ifMust']:checked").val()+'">' +
+            '<input type="hidden" name="paramso['+index+'].paramComment" value="'+$("input[name='paramso["+index+"].paramComment']").val()+'">' +
+            '<input type="hidden" name="paramso['+index+'].fatherName" value="'+$("select[name='paramso["+index+"].fatherName']").val()+'">' +
+            '<td>' +
+            num +
+            '</td><td id="paramso'+index+'-paramTitle" ondblclick="modifyOutputParam(&apos;paramso'+index+'-paramTitle&apos;,'+index+',&apos;paramTitle&apos;)">' +
+            $("input[name='paramso["+index+"].paramTitle']").val() +
+            '</td><td id="paramso'+index+'-paramName" ondblclick="modifyOutputParam(&apos;paramso'+index+'-paramName&apos;,'+index+',&apos;paramName&apos;)">' +
+            $("input[name='paramso["+index+"].paramName']").val() +
+            '</td><td id="paramso'+index+'-paramType" ondblclick="modifyOutputParam(&apos;paramso'+index+'-paramType&apos;,'+index+',&apos;paramType&apos;)">' +
+            $("input[name='paramso["+index+"].paramType']:checked").val().replace('<','&lt;').replace('>','&gt;') +
+            '</td><td id="paramso'+index+'-ifMust" ondblclick="modifyOutputParam(&apos;paramso'+index+'-ifMust&apos;,'+index+',&apos;ifMust&apos;)">' +
+            $("input[name='paramso["+index+"].ifMust']:checked").val() +
+            '</td><td id="paramso'+index+'-paramComment" ondblclick="modifyOutputParam(&apos;paramso'+index+'-paramComment&apos;,'+index+',&apos;paramComment&apos;)">' +
+            $("input[name='paramso["+index+"].paramComment']").val() +
+            '</td><td id="paramso'+index+'-fatherName" ondblclick="modifyOutputParam(&apos;paramso'+index+'-fatherName&apos;,'+index+',&apos;fatherName&apos;)">' +
+            $("select[name='paramso["+index+"].fatherName']").val() +
+            '</td><td>' +
+            '<button class="btn btn-default" type="button">删除</button></td></tr>';
+        $("#response-param-table-tbody").html(tbody);
+        index++;
+        $("#response-param-num").val(index);
+        $("#response-param-form").html("");
+        $("#response-show-hide").val("hide");
+        if(index > 0){$("#response-param-table").show();}
     }
 
     function modifyInputParam(id,index,name){
         var haha = "#"+id;
         var v = $(haha).text();
         var str = '<input id="'+id+'-text" onBlur="inputTextBlur(&apos;'+id+'&apos;,'+index+',&apos;'+name+'&apos;)" type="text" value="'+v+'"/>';
+        $(haha).html(str);
+        $(haha+'-text').focus();
+    }
+    function modifyOutputParam(id,index,name){
+        var haha = "#"+id;
+        var v = $(haha).text();
+        var str = '<input id="'+id+'-text" onBlur="outputTextBlur(&apos;'+id+'&apos;,'+index+',&apos;'+name+'&apos;)" type="text" value="'+v+'"/>';
         $(haha).html(str);
         $(haha+'-text').focus();
     }
@@ -500,6 +638,15 @@
         }
         $(haha).text($(xixi).val());
         $("input[name='params["+index+"]."+name+"']").val($(haha).text());
+    }
+    function outputTextBlur(id,index,name){
+        var haha = "#"+id;
+        var xixi = haha + '-text';
+        if($(xixi).val() == null || $(xixi).val().trim() == ""){
+            $(haha).text($("input[name='paramso["+index+"]."+name+"']").val());
+        }
+        $(haha).text($(xixi).val());
+        $("input[name='paramso["+index+"]."+name+"']").val($(haha).text());
     }
 
     function saveApi(){
@@ -538,7 +685,7 @@
             data: $('#apiForm').serialize(),
             success: function (result) {
                 alert(result.message);
-                window.location.href="http://localhost:8080/controller.html";
+//                window.location.href="http://localhost:8080/controller.html";
             }
         });
     }

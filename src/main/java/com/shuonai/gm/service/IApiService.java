@@ -12,4 +12,8 @@ public interface IApiService {
     public int deleteApi(int id);
 
     public Api getApi(int id);
+
+    public int getSeq();
+
+    public int updateSeq(int row);
 }

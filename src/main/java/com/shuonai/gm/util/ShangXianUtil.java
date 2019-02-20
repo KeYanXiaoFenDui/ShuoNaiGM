@@ -2,6 +2,7 @@ package com.shuonai.gm.util;
 
 
 import java.io.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -38,6 +39,7 @@ public class ShangXianUtil {
 //        Matcher m = p.matcher(str);
 //        System.out.println(m.replaceAll("").trim());
     }
+
 //    public static void main(String[] args) {
 ////        factory("C:/Users/冼世龙/Desktop/ssss.txt","C:/Users/冼世龙/Desktop/test");
 ////        dllTo_aAsASQL("");

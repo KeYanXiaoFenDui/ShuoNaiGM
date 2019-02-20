@@ -103,6 +103,15 @@
                             <li>
                                 <a href="#panel-828541" data-toggle="tab">API</a>
                             </li>
+                            <li>
+                                <a href="#panel-201914" data-toggle="tab">project</a>
+                            </li>
+                            <li>
+                                <a href="#panel-319102" data-toggle="tab">AddProjectModel</a>
+                            </li>
+                            <li>
+                                <a href="#panel-201913" data-toggle="tab">ApiList</a>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="panel-449890">
@@ -406,6 +415,119 @@
 
                                 </form>
                             </div>
+                            <div class="tab-pane" id="panel-201914">
+                                <div id="left-c">
+                                    <div class="col-md-8 column">
+                                        <span>项目</span>
+                                        <div style="float: right;">
+                                            <input type="text" id="searchProjectNameTitle"/>
+                                            <button class="btn btn-default" type="button">查询</button>
+                                            <a id="modal-884953" href="#modal-container-884953" role="button" class="btn" data-toggle="modal">新增</a>
+                                            <!--<button class="btn btn-default" type="button" onclick="newProject()">新增</button>-->
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <table class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>
+                                                    序号
+                                                </th>
+                                                <th>
+                                                    项目英文名
+                                                </th>
+                                                <th>
+                                                    项目标题
+                                                </th>
+                                                <th>
+                                                    操作
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    1
+                                                </td>
+                                                <td>
+                                                    amp
+                                                </td>
+                                                <td>
+                                                    协会官网
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-default" type="button">查看</button><button class="btn btn-default" type="button">修改</button><button class="btn btn-default" type="button">删除</button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="modal fade" id="modal-container-884953" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title" id="myModalLabel-a">
+                                                    新增项目
+                                                </h4>
+                                            </div>
+                                            <div class="modal-body" id="myModalLabel-body-a">
+                                                <form action="/templet/newProject" method="post" id="newProject">
+                                                    <span>项目英文名称：</span><input type="text" id="projectName" name="projectName"/>
+                                                    <span>项目中文标题：</span><input type="text" id="projectTitle" name="projectTitle"/>
+                                                </form>
+                                                <!--<input type="hidden" id="where-param">-->
+                                                <!--<input type="hidden" id="and-or-way">-->
+                                                <!--<input type="hidden" id="where-way">-->
+                                                <!--<div>-->
+                                                    <!--<span class="label label-default" onclick="setAndOr('and','and-way')" id="and-way">and</span>-->
+                                                    <!--<span class="label label-default" onclick="setAndOr('or','or-way')" id="or-way">or</span>-->
+                                                <!--</div>-->
+                                                <!--<div id="myModalLabel-body-a-way">-->
+                                                    <!--<span class="label label-default" onclick="setWhereWay('=','equal-way')" id="equal-way">等于</span>-->
+                                                    <!--<span class="label label-default" onclick="setWhereWay('<=','less-equal-way')" id="less-equal-way">小于等于</span>-->
+                                                    <!--<span class="label label-default" onclick="setWhereWay('>=','greater-equal-way')" id="greater-equal-way">大于等于</span>-->
+                                                    <!--<span class="label label-default" onclick="setWhereWay('like','like-way')" id="like-way">like</span>-->
+                                                <!--</div>-->
+                                                <!--<div class='row clearfix' style="height: 20px;"></div>-->
+                                                <!--<div>-->
+                                                    <!--<span>参数：</span><input type="text" class="form-control" id="inputTest"/>-->
+                                                <!--</div>-->
+                                                <!--<div class='row clearfix' style="height: 20px;"></div>-->
+                                                <!--<div>-->
+                                                    <!--<span>结果：</span><span id="where-way-result"></span>-->
+                                                <!--</div>-->
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> <button type="button" class="btn btn-primary" onclick="newProject()">保存</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane" id="panel-319102">
+                                <form action="/templet/newProjectModel" method="post" id="addProjectModel">
+                                <div id="left-d">
+                                    <button class="btn btn-default" type="button" onclick="saveProjectModel()">
+                                        新建ProjectModel
+                                    </button>
+                                    <div>
+                                        <span class="text-title">项目英文名称：</span><input type="text" id="project_name" name="projectName"/><br/>
+                                        <span class="text-title">项目中文标题：</span><input type="text" id="project_title" name="projectTitle"/><br/>
+                                        <span class="text-title">模块英文名称：</span><input type="text" id="model_name" name="modelName"/><br/>
+                                        <span class="text-title">模块中文标题：</span><input type="text" id="model_title" name="modelTitle"/><br/>
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane" id="panel-201913">
+                                <div id="left-e">
+                                    ApiList
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -688,6 +810,45 @@
 //                window.location.href="http://localhost:8080/controller.html";
             }
         });
+    }
+    function saveProjectModel(){
+        alert("addProjerct!");
+        if($("#project_name").val() == null || $("#project_name").val().trim() == ""){
+            alert("项目英文名称为空!");return;
+        }
+        if($("#project_title").val() == null || $("#project_title").val().trim() == ""){
+            alert("项目中文标题为空!");return;
+        }
+        if($("#model_name").val() == null || $("#model_name").val().trim() == ""){
+            alert("模块英文名称为空!");return;
+        }
+        if($("#model_title").val() == null || $("#model_title").val().trim() == ""){
+            alert("模块中文标题为空!");return;
+        }
+        $.ajax({
+            type: "post",
+//            url: "/templet/newApi",
+            url: "/templet/newProjectModel",
+            data: $('#addProjectModel').serialize(),
+            success: function (result) {
+                alert(result.message);
+//                window.location.href="http://localhost:8080/controller.html";
+            }
+        });
+    }
+    function newProject(){
+        alert("submit");
+        $.ajax({
+            type: "post",
+//            url: "/templet/newApi",
+            url: "/templet/newProject",
+            data: $('#newProject').serialize(),
+            success: function (result) {
+                alert(result.message);
+//                window.location.href="http://localhost:8080/controller.html";
+            }
+        });
+//        $("#modal-884953").click();
     }
 
 </script>

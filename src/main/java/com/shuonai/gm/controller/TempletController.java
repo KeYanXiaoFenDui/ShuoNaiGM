@@ -3,11 +3,12 @@ package com.shuonai.gm.controller;
 import com.github.pagehelper.PageHelper;
 import com.shuonai.gm.domain.Api;
 import com.shuonai.gm.domain.ApiParam;
+import com.shuonai.gm.domain.ApiProjectModel;
+import com.shuonai.gm.domain.Project;
 import com.shuonai.gm.domain.vo.ApiObjectVo;
 import com.shuonai.gm.domain.vo.ParamObjectVo;
-import com.shuonai.gm.service.IApiParamService;
-import com.shuonai.gm.service.IApiService;
-import com.shuonai.gm.service.ITableParamService;
+import com.shuonai.gm.domain.vo.ProjectModelVo;
+import com.shuonai.gm.service.*;
 import com.shuonai.gm.util.CommonUtil;
 import com.shuonai.gm.util.JsonTool;
 import com.shuonai.gm.util.PageBean;
@@ -25,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,6 +49,10 @@ public class TempletController {
     private IApiService apiService;
     @Autowired
     private IApiParamService apiParamService;
+    @Autowired
+    private IApiProjectModelService apiProjectModelService;
+    @Autowired
+    private IProjectService projectService;
 
     @Transactional(rollbackFor = Exception.class)
     @RequestMapping(value = "/listStoreForC")
@@ -318,6 +324,79 @@ public class TempletController {
         return CommonUtil.ToResultHashMap(status,message,data);
     }
 
+    @ResponseBody
+    @Transactional
+    @RequestMapping(value = "/addProjectModel")
+    public HashMap<String,Object> addProjectModel(HttpServletRequest request, ProjectModelVo projectModelVo){
+        int status = MessageConstant.ERROR_CODE;
+        String message = MessageConstant.ERROR_INFO_DEMO;
+        Map<String,Object> data = new HashMap<>();
+        try{
+            ApiProjectModel apm = new ApiProjectModel();
+            apm.setProjectName(projectModelVo.getProjectName());
+            apm.setProjectTitle(projectModelVo.getProjectTitle());
+            apm.setModelName(projectModelVo.getModelName());
+            apm.setModelTitle(projectModelVo.getModelTitle());
+            apm.setCreateTime(new Date());
+            apm.setStatus(1);
+            int result = apiProjectModelService.insertApiProjectModel(apm);
+            if(result == 1){
+                status = MessageConstant.SUCCESS_CODE;
+                message = MessageConstant.SUCCESS_INFO;
+            }
+            data.put("status",status);
+            data.put("message",message);
+        } catch (Exception e){
+            status = -1;
+            message = MessageConstant.ERROR_INFO;
+            e.printStackTrace();
+            logger.error("添加项目模块异常,回滚:"+e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();//出错回滚
+        }
+        return CommonUtil.ToResultHashMap(status,message,null);
+    }
+
+    @ResponseBody
+    @Transactional
+    @RequestMapping(value = "/newProject",method = {RequestMethod.POST})
+    public HashMap<String,Object> newProject(HttpServletRequest request, ProjectModelVo projectModelVo){
+        int status = MessageConstant.ERROR_CODE;
+        String message = MessageConstant.ERROR_INFO_DEMO;
+        Map<String,Object> data = new HashMap<>();
+        try{
+            String projectName = CommonUtil.getStr(request.getParameter("projectName"),"");
+            String projectTitle = CommonUtil.getStr(request.getParameter("projectTitle"),"");
+            if(!projectName.equals("") && !projectTitle.equals("")){
+                Project p = new Project();
+                p.setProjectName(projectName);
+                p.setProjectTitle(projectTitle);
+                projectService.insertProject(p);
+            }
+            System.out.println("newProject:"+projectName);
+            System.out.println("newProject:"+projectTitle);
+//            ApiProjectModel apm = new ApiProjectModel();
+//            apm.setProjectName(projectModelVo.getProjectName());
+//            apm.setProjectTitle(projectModelVo.getProjectTitle());
+//            apm.setModelName(projectModelVo.getModelName());
+//            apm.setModelTitle(projectModelVo.getModelTitle());
+//            apm.setCreateTime(new Date());
+//            apm.setStatus(1);
+//            int result = apiProjectModelService.insertApiProjectModel(apm);
+//            if(result == 1){
+//                status = MessageConstant.SUCCESS_CODE;
+//                message = MessageConstant.SUCCESS_INFO;
+//            }
+            data.put("status",status);
+            data.put("message",message);
+        } catch (Exception e){
+            status = -1;
+            message = MessageConstant.ERROR_INFO;
+            e.printStackTrace();
+            logger.error("添加项目模块异常,回滚:"+e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();//出错回滚
+        }
+        return CommonUtil.ToResultHashMap(status,message,null);
+    }
 
     public void exportExcel(ApiObjectVo apiObjectVo,JSONObject json,JSONObject jsonInput) {
 //        WritableWorkbook book = null;
@@ -403,7 +482,7 @@ public class TempletController {
                     row++;num++;
                 }
                 if(CommonUtil.getStr(apiObjectVo.getRequestMethod(),"").equals("post")){
-                    sh.addCell(new Label(0, row, "返回参数示例："));
+                    sh.addCell(new Label(0, row, "请求参数示例："));
                     sh.addCell(new Label(1, row, jsonInput.toString()));
                     row++;
                 }

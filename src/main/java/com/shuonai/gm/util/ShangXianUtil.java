@@ -1,7 +1,10 @@
 package com.shuonai.gm.util;
 
 
+import com.shuonai.gm.domain.ManagerPlan;
+
 import java.io.*;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -31,7 +34,11 @@ public class ShangXianUtil {
     private static int fail = 0;
 
     public static void main(String[] args){
-        factory("D:/桌面文件/ssss.txt","D:/桌面文件/test");
+
+        for(int i= 0 ;i<10;i++){
+            System.out.println(planA(1000)+"::"+planA(2000));
+        }
+//        factory("D:/桌面文件/ssss.txt","D:/桌面文件/test");
 //        String str = "a;sdj{213f}},{sdjlk};ald;;125{sd11}";
 //        String regEx = "\\{.*?\\}";
 //        String regEx2 = "<([^>]*)>";
@@ -39,6 +46,98 @@ public class ShangXianUtil {
 //        Matcher m = p.matcher(str);
 //        System.out.println(m.replaceAll("").trim());
     }
+
+    public static int planA(int perMax){
+        int sumNumber = 300;
+        int sumTrue = 180;
+        double sumRate = 0.55;
+        int nowNumber = 10;
+        int nowTrue = 5;
+        double nowRate = 0.5;
+        int perMoney = 1000;
+        int sumMoney = 50000;
+        double perToSum = 0.1;
+        int perMinMoney = 200;
+        int perMaxMoney = perMax;
+        ManagerPlan mp = new ManagerPlan();
+        mp.setSumNumber(sumNumber);//总投数
+        mp.setSumTrue(sumTrue);//总中数
+        mp.setSumRate(sumRate);//总投命中率
+        mp.setNowNumber(nowNumber);//当前投数
+        mp.setNowRate(nowRate);//当前命中率
+        mp.setPerMoney(perMoney);//每场投本
+        mp.setSumMoney(sumMoney);//总本金
+        mp.setPerToSum(perToSum);//投本总金比
+        mp.setPerMinMoney(perMinMoney);//每场投本下限
+        mp.setPerMaxMoney(perMaxMoney);//每场投本上限
+
+        Random r=new Random();
+        int[] result = new int[200];
+        for(int y = 0;y<200;y++){
+            int i = r.nextInt(100);
+            result[y] = i;
+        }
+        for (int i = 0 ;i<result.length;i++){
+            if(result[i]<44){//胜率参数  false
+//                System.out.print(0);
+                sumNumber++;nowNumber++;
+
+                mp.setSumNumber(sumNumber);//总投数
+                mp.setSumTrue(sumTrue);//总中数
+                sumRate = m2((double)sumTrue/(double)sumNumber);
+                mp.setSumRate(sumRate);//总投命中率
+
+                mp.setNowNumber(nowNumber);//当前投数
+                mp.setNowTrue(nowTrue);//当前中数
+                nowRate = m2((double)nowTrue/(double)nowNumber);
+                mp.setNowRate(nowRate);//当前命中率
+
+                mp.setPerMoney(perMoney);//每场投本
+                sumMoney = sumMoney - perMoney;
+                mp.setSumMoney(sumMoney);//总本金
+
+                perMoney = (int) (sumMoney * perToSum);
+                perMoney = (int)Math.floor(perMoney/100)*100;
+                if(perMoney > perMaxMoney){perMoney = perMaxMoney;}
+                if(perMoney < perMinMoney){perMoney = perMinMoney;}
+//                mp.setPerToSum(perToSum);//投本总金比
+//                mp.setPerMinMoney(perMinMoney);//每场投本下限
+//                mp.setPerMaxMoney(perMaxMoney);//每场投本上限
+            }else{// true
+//                System.out.print(1);
+                sumNumber++;nowNumber++;sumTrue++;nowTrue++;
+
+                mp.setSumNumber(sumNumber);//总投数
+                mp.setSumTrue(sumTrue);//总中数
+                sumRate = m2((double)sumTrue/(double)sumNumber);
+                mp.setSumRate(sumRate);//总投命中率
+
+                mp.setNowNumber(nowNumber);//当前投数
+                mp.setNowTrue(nowTrue);//当前中数
+                nowRate = m2((double)nowTrue/(double)nowNumber);
+                mp.setNowRate(nowRate);//当前命中率
+
+                mp.setPerMoney(perMoney);//每场投本
+                sumMoney = sumMoney + perMoney;
+                mp.setSumMoney(sumMoney);//总本金
+
+                perMoney = (int) (sumMoney * perToSum);
+                perMoney = (int)Math.floor(perMoney/100)*100;
+                if(perMoney > perMaxMoney){perMoney = perMaxMoney;}
+                if(perMoney < perMinMoney){perMoney = perMinMoney;}
+
+            }
+//            System.out.println(mp);
+        }
+//        System.out.println(sumMoney);
+        return sumMoney;
+
+    }
+    public static double m2(double f) {
+         DecimalFormat df = new DecimalFormat("#.00");
+        String dd = df.format(f);
+         return Double.parseDouble(dd);
+     }
 
 //    public static void main(String[] args) {
 ////        factory("C:/Users/冼世龙/Desktop/ssss.txt","C:/Users/冼世龙/Desktop/test");

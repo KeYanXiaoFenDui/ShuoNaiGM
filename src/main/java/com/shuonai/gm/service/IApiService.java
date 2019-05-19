@@ -3,6 +3,8 @@ package com.shuonai.gm.service;
 import com.shuonai.gm.domain.Api;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface IApiService {
     public int insertApi(Api api);
@@ -16,4 +18,5 @@ public interface IApiService {
     public int getSeq();
 
     public int updateSeq(int row);
+    public List<Api> getApiList();
 }

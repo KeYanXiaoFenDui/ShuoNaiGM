@@ -35,10 +35,10 @@ public class ShangXianUtil {
 
     public static void main(String[] args){
 
-        for(int i= 0 ;i<10;i++){
-            System.out.println(planA(1000)+"::"+planA(2000));
-        }
-//        factory("D:/桌面文件/ssss.txt","D:/桌面文件/test");
+//        for(int i= 0 ;i<10;i++){
+//            System.out.println(planA(1000)+"::"+planA(2000));
+//        }
+        factory("C:/Users/xsl/Desktop/ssss.txt","C:/Users/xsl/Desktop/test","com.example.demo");
 //        String str = "a;sdj{213f}},{sdjlk};ald;;125{sd11}";
 //        String regEx = "\\{.*?\\}";
 //        String regEx2 = "<([^>]*)>";
@@ -181,12 +181,12 @@ public class ShangXianUtil {
      * @param inPath 输入文件 D:/xxxx/xxx/xxx.txt
      * @param outPath 输出路径 D:/xxxx/xx
      */
-    private static void factory(String inPath,String outPath){
+    private static void factory(String inPath,String outPath,String packageName){
         Map object = getTableMsg(inPath);
         createDomain(object,outPath+"/domain");
-        List<Map> methods = createMapper(object,outPath+"/mapper");
-        createInterface(methods,object,outPath+"/service");
-        createImpl(methods,object,outPath+"/service/impl");
+        List<Map> methods = createMapper(object,outPath+"/mapper",packageName);
+        createInterface(methods,object,outPath+"/service",packageName);
+        createImpl(methods,object,outPath+"/service/impl",packageName);
     }
     /**
      * 生成实现类ServiceImpl,,依赖createMapper方法的返回
@@ -194,10 +194,15 @@ public class ShangXianUtil {
      * @param object
      * @param parentPath
      */
-    private static void createImpl(List<Map> methods,Map object,String parentPath){
+    private static void createImpl(List<Map> methods,Map object,String parentPath,String packageName){
         StringBuffer sb = new StringBuffer();
         String domainName = (String)object.get("domainName");
         List<Map> params = (List<Map>)object.get("params");
+        sb.append("import "+packageName+".domain."+toUpperCaseFirstOne(domainName)+";\n");
+        sb.append("import "+packageName+".mapper."+toUpperCaseFirstOne(domainName)+"Mapper;\n");
+        sb.append("import "+packageName+".service.I"+toUpperCaseFirstOne(domainName)+"Service;\n");
+        sb.append("import org.springframework.beans.factory.annotation.Autowired;\n");
+        sb.append("import org.springframework.stereotype.Service;\n");
         sb.append("@Service\n");
         sb.append("public class "+toUpperCaseFirstOne(domainName)+"ServiceImpl implements I"+toUpperCaseFirstOne(domainName)+"Service{\n");
         sb.append("@Autowired\n");
@@ -219,10 +224,14 @@ public class ShangXianUtil {
      * @param object
      * @param parentPath
      */
-    private static void createInterface(List<Map> methods,Map object,String parentPath){
+    private static void createInterface(List<Map> methods,Map object,String parentPath,String packageName){
         StringBuffer sb = new StringBuffer();
         String domainName = (String)object.get("domainName");
         List<Map> params = (List<Map>)object.get("params");
+//        import com.example.demo.domain.WorkFlow;
+//        import org.springframework.stereotype.Service;
+        sb.append("import org.springframework.stereotype.Service;\n");
+        sb.append("import "+packageName+".domain."+toUpperCaseFirstOne(domainName)+";\n");
         sb.append("@Service\n");
         sb.append("public interface I"+toUpperCaseFirstOne(domainName)+"Service {\n");
         for (Map method:methods){
@@ -236,7 +245,7 @@ public class ShangXianUtil {
      * 生成增删查改Mapper对象,,,配合getTableMsg使用
      * @param object
      */
-    private static List<Map> createMapper(Map object,String parentPath){
+    private static List<Map> createMapper(Map object,String parentPath,String packageName){
         List<Map> methods = new ArrayList<Map>();
         StringBuffer sb = new StringBuffer();
         StringBuffer temp1 = new StringBuffer();
@@ -245,6 +254,8 @@ public class ShangXianUtil {
         String tableName = (String)object.get("tableName");
         String domainName = (String)object.get("domainName");
         List<Map> params = (List<Map>)object.get("params");
+        sb.append("import org.apache.ibatis.annotations.*;\n");
+        sb.append("import "+packageName+".domain."+toUpperCaseFirstOne(domainName)+";\n");
         sb.append("@Mapper\n");
         sb.append("public interface "+toUpperCaseFirstOne(domainName)+"Mapper {\n");
         sb.append("\n");
@@ -319,6 +330,8 @@ public class ShangXianUtil {
         String tableName = (String)object.get("tableName");
         String domainName = (String)object.get("domainName");
         List<Map> params = (List<Map>)object.get("params");
+        sb.append("import java.io.Serializable;\n");
+        sb.append("import java.util.Date;\n");
         sb.append("public class "+toUpperCaseFirstOne(domainName)+" implements Serializable {\n");
         for(Map m:params){
             sb.append("private " + getStr(m.get("domainType"),"") + " "+getStr(m.get("domainParam"),"")+";"+"//"+getStr(m.get("comment"),"")+"\n");

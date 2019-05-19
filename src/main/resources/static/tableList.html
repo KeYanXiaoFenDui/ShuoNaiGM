@@ -407,7 +407,7 @@
         var paramStr = $('#searchParamTags').val();
         var wParamStr = $('#whereParamTags').val();
         $.ajax({
-            url: "http://localhost:8080/tableParam/getTableDetailJson",
+            url: "/tableParam/getTableDetailJson",
             data: {
                 tableId:tableId
             },
@@ -502,7 +502,7 @@
     function getTableList() {
         var tableStr = $('#tableTags').val();
         $.ajax({
-            url: "http://localhost:8080/tableParam/getTableListJson",
+            url: "/tableParam/getTableListJson",
             data:{
                 tables: $("#tableTags").val()
             },
@@ -683,7 +683,7 @@
             return;
         }
         $.ajax({
-            url: "http://localhost:8080/tableParam/getTableRelation",
+            url: "/tableParam/getTableRelation",
             data: {
                 tableA:$("#first-table").val(),
                 tableB:$("#second-table").val()

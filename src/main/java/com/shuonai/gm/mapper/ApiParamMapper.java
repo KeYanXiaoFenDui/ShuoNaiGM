@@ -1,7 +1,10 @@
 package com.shuonai.gm.mapper;
 
 import com.shuonai.gm.domain.ApiParam;
+import com.shuonai.gm.domain.vo.ParamObjectVo;
 import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 @Mapper
 public interface ApiParamMapper {
@@ -18,5 +21,8 @@ public interface ApiParamMapper {
 
     @Select("select * from api_param where id=#{id}")
     public ApiParam getApiParam(int id);
+
+    @Select("select param_title,param_name,param_type,if_must,param_comment from api_param where api_id = #{apiId} and param_in_out_type = 1")
+    public List<ParamObjectVo> getApiParamIn(int apiId);
 
 }

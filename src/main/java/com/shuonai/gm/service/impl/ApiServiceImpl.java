@@ -6,6 +6,8 @@ import com.shuonai.gm.service.IApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ApiServiceImpl implements IApiService {
     @Autowired
@@ -39,5 +41,10 @@ public class ApiServiceImpl implements IApiService {
     @Override
     public int updateSeq(int row) {
         return apiMapper.updateSeq(row);
+    }
+
+    @Override
+    public List<Api> getApiList() {
+        return apiMapper.getApiList();
     }
 }

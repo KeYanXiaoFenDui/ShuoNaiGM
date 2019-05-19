@@ -42,7 +42,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/templet")
 public class TempletController {
-    public static final String OutputPath_uk = "D:/桌面文件/测试.xls";
+//    public static final String OutputPath_uk = "D:/桌面文件/测试.xls";
+    public static final String OutputPath_uk = "C:\\Users\\xsl\\Desktop\\测试.xls";
     private static Logger logger = LoggerFactory.getLogger(TempletController.class);
 
     @Autowired
@@ -115,6 +116,229 @@ public class TempletController {
      *
      */
     @ResponseBody
+    @RequestMapping(value = "/selectNewApi")
+    public HashMap<String,Object> selectNewApi(HttpServletRequest request,ApiObjectVo apiObjectVo) {
+        int status = MessageConstant.ERROR_CODE;
+        String message = MessageConstant.ERROR_INFO_DEMO;
+        Map<String,Object> data = new HashMap<>();
+        Map<String,Object> data2 = new HashMap<>();
+        try {
+            List<Api> apiList = apiService.getApiList();
+            for (Api api : apiList){
+                StringBuffer sb = new StringBuffer();
+    //
+    //            String apiName = apiObjectVo.getApiName();
+                apiObjectVo.setApiName(api.getApiName());
+    //            String apiBasePath = apiObjectVo.getApiBasePath();
+                apiObjectVo.setApiBasePath(api.getBasePath());
+    //            String apiMethod = apiObjectVo.getApiMethod();
+                apiObjectVo.setApiMethod(api.getApiMethod());
+    //            String apiComment = apiObjectVo.getApiComment();
+                apiObjectVo.setApiComment(api.getApiComment());
+    //            String requestMethod = apiObjectVo.getRequestMethod();
+                apiObjectVo.setRequestMethod(api.getRequestMethod());
+    //            String dataOperation = apiObjectVo.getDataOperation();
+                apiObjectVo.setDataOperation(api.getDataOperation());
+    //            int ifRollback = apiObjectVo.getIfRollback();
+                apiObjectVo.setIfRollback(api.getIfRollback());
+    //            int ifPages = apiObjectVo.getIfPages();
+                apiObjectVo.setIfPages(api.getIfPages());
+    //
+    //            Api api = new Api();
+    //            api.setApiName(apiName);
+    //            api.setBasePath("");
+    //            api.setBasePath(apiBasePath);
+    //            api.setApiMethod(apiMethod);
+    //            api.setApiComment(apiComment);
+    //            api.setRequestMethod(requestMethod);
+    //            api.setDataOperation(dataOperation);
+    //            api.setIfRollback(ifRollback);
+    //            api.setIfPages(ifPages);
+                Date date = new Date();
+    //            api.setCreateTime(date);
+    //            api.setUpdateTime(date);
+    //            api.setStatus(1);
+    //            apiService.insertApi(api);
+
+//                List<ParamObjectVo> params = apiObjectVo.getParams();
+                List<ParamObjectVo> params = apiParamService.getApiParamIn(api.getId());
+                apiObjectVo.setParams(params);
+                List<ParamObjectVo> paramso = apiObjectVo.getParamso();
+                if(paramso != null && paramso.size() > 0){
+                    for (ParamObjectVo param : paramso){
+                        String paramTitle = param.getParamTitle();
+                        String paramName = param.getParamName();
+                        String paramType = param.getParamType();
+                        String ifMust = param.getIfMust();
+                        String paramComment = param.getParamComment();
+
+                        ApiParam apiParam = new ApiParam();
+                        apiParam.setApiId(api.getId());
+                        apiParam.setParamInOutType(2);
+                        apiParam.setParentId(0);
+                        apiParam.setParamTitle(paramTitle);
+                        apiParam.setParamName(paramName);
+                        apiParam.setParamType(paramType);
+                        apiParam.setIfMust(ifMust);
+                        apiParam.setParamComment(paramComment);
+                        apiParam.setCreateTime(date);
+                        apiParam.setUpdateTime(date);
+                        apiParam.setStatus(1);
+//                        apiParamService.insertApiParam(apiParam);
+                    }
+                }
+                sb.append("/**\n");
+                sb.append("*"+api.getApiName()+"\n");
+                if(api.getApiComment() != null && !api.getApiComment().equals("")){
+                    sb.append("*"+api.getApiComment()+"\n");
+                }
+                sb.append("*/\n");
+                if(api.getIfRollback() != 0 && api.getIfRollback() == 1) {//回滚
+                    sb.append("@Transactional(rollbackFor = Exception.class)\n");
+                }
+                sb.append("@RequestMapping(value = \"/"+api.getApiMethod()+"\")\n");
+                sb.append("public HashMap<String,Object> "+api.getApiMethod()+"(HttpServletRequest request) {\n");
+                sb.append("\tint status = MessageConstant.ERROR_CODE;\n");
+                sb.append("\tString message = MessageConstant.ERROR_INFO_DEMO;\n");
+                sb.append("\tHashMap<String,Object> data = new HashMap<>();\n");
+
+                if(api.getIfPages() == 1){
+                    sb.append("\tPageHelper.startPage(Integer.parseInt(CommonUtil.getStr(request.getParameter(\"pageNum\"), \"1\")), Integer.parseInt(CommonUtil.getStr(request.getParameter(\"pageSize\"), \"10\")));//第几页,,,每页多少条记录\n");
+                }
+                if(params != null && params.size() > 0){
+                    for (ParamObjectVo param : params){
+                        String paramTitle = param.getParamTitle();
+                        String paramName = param.getParamName();
+                        String paramType = param.getParamType();
+                        String ifMust = param.getIfMust();
+                        String paramComment = param.getParamComment();
+
+                        ApiParam apiParam = new ApiParam();
+                        apiParam.setApiId(api.getId());
+                        apiParam.setParamInOutType(1);
+                        apiParam.setParentId(0);
+                        apiParam.setParamTitle(paramTitle);
+                        apiParam.setParamName(paramName);
+                        apiParam.setParamType(paramType);
+                        apiParam.setIfMust(ifMust);
+                        apiParam.setParamComment(paramComment);
+                        apiParam.setCreateTime(date);
+                        apiParam.setUpdateTime(date);
+                        apiParam.setStatus(1);
+//                        apiParamService.insertApiParam(apiParam);
+
+                        if(paramComment != null && !paramComment.trim().equals("")){
+                            sb.append("\t//"+paramTitle+"\t"+paramComment+"\n");
+                        }
+                        if(paramType != null && paramType.equals("String")){
+                            //String 类型参数
+                            sb.append("\tString "+paramName+" = CommonUtil.getStr(request.getParameter(\""+paramName+"\"),\"\");\n");
+                            if(ifMust != null && ifMust.equals("T")){
+                                sb.append("\tif("+paramName+" == null || "+paramName+".equals(\"\")){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
+                            }
+                        }else if(paramType != null && paramType.equals("int")){
+                            //int 类型参数
+                            sb.append("\tint "+paramName+" = Integer.parseInt(CommonUtil.getStr(request.getParameter(\""+paramName+"\"),\"-500\"));\n");
+                            if(ifMust != null && ifMust.equals("T")){
+                                sb.append("\tif("+paramName+" == -500){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
+                            }
+                        }else if(paramType != null && paramType.equals("Map")){
+                            //Map 类型参数
+                            sb.append("\tMap "+paramName+" = (Map)request.getParameter(\""+paramName+"\");\n");
+                            if(ifMust != null && ifMust.equals("T")){
+                                sb.append("\tif("+paramName+" == null){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
+                            }
+                        }else if(paramType != null && paramType.equals("List<Map>")){
+                            //List<Map> 类型参数
+                            sb.append("\tList<Map> "+paramName+" = (List<Map>)request.getParameter(\""+paramName+"\");\n");
+                            if(ifMust != null && ifMust.equals("T")){
+                                sb.append("\tif("+paramName+" == null){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
+                            }
+                        }else if(paramType != null && paramType.equals("List<String>")){
+                            //List<String> 类型参数
+                            sb.append("\tList<String> "+paramName+" = (List<String>)request.getParameter(\""+paramName+"\");\n");
+                            if(ifMust != null && ifMust.equals("T")){
+                                sb.append("\tif("+paramName+" == null){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
+                            }
+                        }else if(paramType != null && paramType.equals("List<Integer>")){
+                            //List<Integer> 类型参数
+                            sb.append("\tList<Integer> "+paramName+" = (List<Integer>)request.getParameter(\""+paramName+"\");\n");
+                            if(ifMust != null && ifMust.equals("T")){
+                                sb.append("\tif("+paramName+" == null){return CommonUtil.ToResultHashMap(status,\""+paramName+"为空!\",null);}\n");
+                            }
+                        }
+                    }
+                }
+
+                if(api.getIfRollback() != 0 && api.getIfRollback() == 1) {//回滚
+                    sb.append("\ttry {\n");
+                }
+
+                if(api.getIfPages() == 1){
+                    sb.append("\tPageBean<Map> list = new PageBean<Map>(resultList);\n");
+                }
+
+                if(api.getIfRollback() != 0 && api.getIfRollback() == 1) {//回滚
+                    sb.append("\t} catch (Exception e){\n");
+                    sb.append("\t\te.printStackTrace();\n");
+                    sb.append("\t\tlogger.error(\""+api.getApiName()+"异常：\" + e.getMessage());\n");
+                    sb.append("\t\tTransactionAspectSupport.currentTransactionStatus().setRollbackOnly();\n");
+                    sb.append("\t}\n");
+                }
+                sb.append("\treturn CommonUtil.ToResultHashMap(status,message,data);\n");
+                sb.append("}\n");
+                System.out.println(sb.toString());
+
+    //            ShangXianUtil.writeToTxt("api.txt","D:\\桌面文件",sb.toString());
+    //            ShangXianUtil.fileChaseFW("D:\\桌面文件\\api.txt",sb.toString());
+                ShangXianUtil.fileChaseFW("C:\\Users\\xsl\\Desktop\\api.txt",sb.toString());
+
+                JSONObject jsonInputParams = null;
+                if (api.getRequestMethod().equals("post")){
+                    data2 = inputParamssJsonTree(apiObjectVo);
+                    jsonInputParams = JSONObject.fromObject(data2);
+                    System.out.println("jsonInput:"+jsonInputParams.toString());
+                }
+
+                data = outputParamssJsonTree(apiObjectVo);
+                JSONObject json = JSONObject.fromObject(CommonUtil.ToResultHashMap(status,message,data));
+                System.out.println("jsonOutput:"+json.toString());
+
+                exportExcel(apiObjectVo,json,jsonInputParams);
+            }
+//            String apiName = CommonUtil.getStr(request.getParameter("apiName"),"");
+//            String apiUrl = CommonUtil.getStr(request.getParameter("apiUrl"),"");
+//            String apiComment = CommonUtil.getStr(request.getParameter("apiComment"),"");
+//            String requestMethod = CommonUtil.getStr(request.getParameter("requestMethod"),"");
+//            String dataOperation = CommonUtil.getStr(request.getParameter("dataOperation"),"");
+//            String ifRollback = CommonUtil.getStr(request.getParameter("ifRollback"),"");
+//            String ifPages = CommonUtil.getStr(request.getParameter("ifPages"),"");
+//            System.out.println(apiName);
+//            System.out.println(apiUrl);
+//            System.out.println(apiComment);
+//            System.out.println(requestMethod);
+//            System.out.println(dataOperation);
+//            System.out.println(ifRollback);
+//            System.out.println(ifPages);
+//            PageHelper.startPage(Integer.parseInt(CommonUtil.getStr(request.getParameter("pageNum"), "1")), Integer.parseInt(CommonUtil.getStr(request.getParameter("pageSize"), "10")));//第几页,,,每页多少条记录
+//            List<Map> storeList = vipService.getListStoreForC(Integer.parseInt(CommonUtil.getStr(request.getParameter("id"),"0")),CommonUtil.getStr(request.getParameter("title"),""));
+//            PageBean<Map> page = new PageBean<Map>(storeList);
+
+//            if(storeList == null){
+//                return CommonUtil.ToResultHashMap(status,MessageConstant.NOT_FIND_DATA,null);
+//            }
+            status = 1;
+            message = MessageConstant.SUCCESS_INFO;
+//            data.put("storeList",page);
+        } catch (Exception e){
+            e.printStackTrace();
+            logger.error("申请会员/会员续费异常：" + e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
+        return CommonUtil.ToResultHashMap(status,message,data);
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/newApi")
     public HashMap<String,Object> newApi(HttpServletRequest request,ApiObjectVo apiObjectVo) {
         int status = MessageConstant.ERROR_CODE;
@@ -183,7 +407,41 @@ public class TempletController {
             if(ifRollback != 0 && ifRollback == 1) {//回滚
                 sb.append("@Transactional(rollbackFor = Exception.class)\n");
             }
-            sb.append("@RequestMapping(value = \"/"+apiMethod+"\")\n");
+            sb.append("@ApiOperation(value = \""+apiName+"\", notes = \""+apiComment+"\")\n");
+            if(params != null && params.size() > 0) {
+                sb.append("@ApiImplicitParams({\n");
+                int count = 1;
+                for (ParamObjectVo param : params) {
+                    String paramTitle = param.getParamTitle();
+                    String paramName = param.getParamName();
+                    String paramType = param.getParamType();
+                    String ifMust = param.getIfMust();
+//                    String paramComment = param.getParamComment();
+                    if(ifMust.equals("T")){
+                        ifMust = "true";
+                    }else if(ifMust.equals("F")){
+                        ifMust = "false";
+                    }
+                    sb.append("@ApiImplicitParam(name = \""+paramName+"\", value = \""+paramTitle+"\", paramType = \"body\", required = "+ifMust+", dataType = \""+paramType+"\")");
+                    if(params.size() == count){
+                        sb.append("\n");
+                    }else if(params.size() > count){
+                        sb.append(",\n");
+                    }
+                    count++;
+                }
+                sb.append("})\n");
+            }
+//            @ApiImplicitParams({
+//                    @ApiImplicitParam(name = "mail", value = "邮箱账号", paramType = "body", required = true, dataType = "String"),
+//                    @ApiImplicitParam(name = "password", value = "密码", paramType = "body", required = true, dataType = "String"),
+//                    @ApiImplicitParam(name = "rePassword", value = "重复密码", paramType = "body", required = true, dataType = "String")
+//            })
+            if(requestMethod.equals("post")){
+                sb.append("@RequestMapping(value = \"/"+apiMethod+"\",method = RequestMethod.POST)\n");
+            }else if(requestMethod.equals("get")){
+                sb.append("@RequestMapping(value = \"/"+apiMethod+"\",method = RequestMethod.GET)\n");
+            }
             sb.append("public HashMap<String,Object> "+apiMethod+"(HttpServletRequest request) {\n");
             sb.append("\tint status = MessageConstant.ERROR_CODE;\n");
             sb.append("\tString message = MessageConstant.ERROR_INFO_DEMO;\n");
@@ -277,7 +535,8 @@ public class TempletController {
             System.out.println(sb.toString());
 
 //            ShangXianUtil.writeToTxt("api.txt","D:\\桌面文件",sb.toString());
-            ShangXianUtil.fileChaseFW("D:\\桌面文件\\api.txt",sb.toString());
+//            ShangXianUtil.fileChaseFW("D:\\桌面文件\\api.txt",sb.toString());
+            ShangXianUtil.fileChaseFW("C:\\Users\\xsl\\Desktop\\api.txt",sb.toString());
 
             JSONObject jsonInputParams = null;
             if (requestMethod.equals("post")){

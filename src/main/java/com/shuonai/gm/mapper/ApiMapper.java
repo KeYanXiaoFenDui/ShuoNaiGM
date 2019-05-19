@@ -3,6 +3,8 @@ package com.shuonai.gm.mapper;
 import com.shuonai.gm.domain.Api;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface ApiMapper {
 
@@ -24,5 +26,8 @@ public interface ApiMapper {
 
     @Update("update seq set seq = #{row}")
     public int updateSeq(int row);
+
+    @Select("select * from api where id > 53")
+    public List<Api> getApiList();
 
 }

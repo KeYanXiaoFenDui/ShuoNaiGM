@@ -1,15 +1,15 @@
 package com.shuonai.gm.util;
 
 
-import com.shuonai.gm.domain.ManagerPlan;
+        import com.shuonai.gm.domain.ManagerPlan;
 
-import java.io.*;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+        import java.io.*;
+        import java.text.DecimalFormat;
+        import java.text.ParseException;
+        import java.text.SimpleDateFormat;
+        import java.util.*;
+        import java.util.regex.Matcher;
+        import java.util.regex.Pattern;
 
 /**
  * 设置工作路径
@@ -39,6 +39,7 @@ public class ShangXianUtil {
 //            System.out.println(planA(1000)+"::"+planA(2000));
 //        }
         factory("C:/Users/xsl/Desktop/ssss.txt","C:/Users/xsl/Desktop/test","com.example.demo");
+//        domainParamToSetMethod("r");
 //        String str = "a;sdj{213f}},{sdjlk};ald;;125{sd11}";
 //        String regEx = "\\{.*?\\}";
 //        String regEx2 = "<([^>]*)>";
@@ -134,10 +135,10 @@ public class ShangXianUtil {
 
     }
     public static double m2(double f) {
-         DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#.00");
         String dd = df.format(f);
-         return Double.parseDouble(dd);
-     }
+        return Double.parseDouble(dd);
+    }
 
 //    public static void main(String[] args) {
 ////        factory("C:/Users/冼世龙/Desktop/ssss.txt","C:/Users/冼世龙/Desktop/test");
@@ -332,8 +333,16 @@ public class ShangXianUtil {
         List<Map> params = (List<Map>)object.get("params");
         sb.append("import java.io.Serializable;\n");
         sb.append("import java.util.Date;\n");
+        sb.append("import io.swagger.annotations.ApiModelProperty;\n");
         sb.append("public class "+toUpperCaseFirstOne(domainName)+" implements Serializable {\n");
         for(Map m:params){
+            String type = getStr(m.get("domainType"),"");
+            if(type.equals("text")){type = "string";}
+            if(type.equals("int")){type = "integer";}
+            if(type.equals("double")){type = "number";}
+            if(type.equals("Date")){type = "string";}
+
+            sb.append("@ApiModelProperty(dataType = \""+type+"\",name = \""+getStr(m.get("domainParam"),"")+"\",value = \""+getStr(m.get("comment"),"")+"\")\n");
             sb.append("private " + getStr(m.get("domainType"),"") + " "+getStr(m.get("domainParam"),"")+";"+"//"+getStr(m.get("comment"),"")+"\n");
         }
         sb.append("\n");
@@ -440,28 +449,30 @@ public class ShangXianUtil {
     //根据对象参数获取setXXX
     //eg:private int id; --> a.setId(Integer.parseInt(getStr("","0")));
     private static void domainParamToSetMethod(String domainName) {
-        List<String> s = readTxtLines("D:/桌面文件/ssss.txt");
+        List<String> s = readTxtLines("C:/Users/xsl/Desktop/ssss.txt");
         for (String ss : s) {
-            ss = ss.trim();
-            ss = ss.substring(0, ss.lastIndexOf(";") + 1);
-            if (ss.indexOf(" int ") != -1) {
-                System.out.println(domainName + ".set" + toUpperCaseFirstOne(ss.substring(ss.lastIndexOf(" ") + 1, ss.lastIndexOf(";"))) + "(Integer.parseInt(getStr(\"\",\"0\")));");
-            } else if (ss.indexOf(" String ") != -1) {
-                System.out.println(domainName + ".set" + toUpperCaseFirstOne(ss.substring(ss.lastIndexOf(" ") + 1, ss.lastIndexOf(";"))) + "(getStr(\"\",\"\"));");
-            } else if (ss.indexOf(" double ") != -1) {
-                System.out.println(domainName + ".set" + toUpperCaseFirstOne(ss.substring(ss.lastIndexOf(" ") + 1, ss.lastIndexOf(";"))) + "(Double.parseDouble(getStr(\"\",\"0\")));");
-            } else if (ss.indexOf(" Date ") != -1) {
-                System.out.println("try {");
-                System.out.println("\tSimpleDateFormat format = new SimpleDateFormat(\"yyyy-MM-dd HH:mm:ss\");");
-                System.out.println("\tLong time = Long.parseLong(getStr(paramsHm.get(\"\"),\"\"));");
-                System.out.println("\tString d = format.format(time);");
-                System.out.println("\tDate date=format.parse(d);");
-                System.out.println("\t" + domainName + ".set" + toUpperCaseFirstOne(ss.substring(ss.lastIndexOf(" ") + 1, ss.lastIndexOf(";"))) + "(date);");
-                System.out.println("} catch (ParseException e) {");
-                System.out.println("\te.printStackTrace();");
-                System.out.println("}");
-            } else {
-                System.out.println(domainName + ".set" + toUpperCaseFirstOne(ss.substring(ss.lastIndexOf(" ") + 1, ss.lastIndexOf(";"))) + "();");
+            if(ss.indexOf("private") != -1){
+                ss = ss.trim();
+                ss = ss.substring(0, ss.lastIndexOf(";") + 1);
+                if (ss.indexOf(" int ") != -1) {
+                    System.out.println(domainName + ".set" + toUpperCaseFirstOne(ss.substring(ss.lastIndexOf(" ") + 1, ss.lastIndexOf(";"))) + "(Integer.parseInt(getStr(\"\",\"0\")));");
+                } else if (ss.indexOf(" String ") != -1) {
+                    System.out.println(domainName + ".set" + toUpperCaseFirstOne(ss.substring(ss.lastIndexOf(" ") + 1, ss.lastIndexOf(";"))) + "(getStr(\"\",\"\"));");
+                } else if (ss.indexOf(" double ") != -1) {
+                    System.out.println(domainName + ".set" + toUpperCaseFirstOne(ss.substring(ss.lastIndexOf(" ") + 1, ss.lastIndexOf(";"))) + "(Double.parseDouble(getStr(\"\",\"0\")));");
+                } else if (ss.indexOf(" Date ") != -1) {
+                    System.out.println("try {");
+                    System.out.println("\tSimpleDateFormat format = new SimpleDateFormat(\"yyyy-MM-dd HH:mm:ss\");");
+                    System.out.println("\tLong time = Long.parseLong(getStr(paramsHm.get(\"\"),\"\"));");
+                    System.out.println("\tString d = format.format(time);");
+                    System.out.println("\tDate date=format.parse(d);");
+                    System.out.println("\t" + domainName + ".set" + toUpperCaseFirstOne(ss.substring(ss.lastIndexOf(" ") + 1, ss.lastIndexOf(";"))) + "(date);");
+                    System.out.println("} catch (ParseException e) {");
+                    System.out.println("\te.printStackTrace();");
+                    System.out.println("}");
+                } else {
+                    System.out.println(domainName + ".set" + toUpperCaseFirstOne(ss.substring(ss.lastIndexOf(" ") + 1, ss.lastIndexOf(";"))) + "();");
+                }
             }
         }
     }
@@ -480,7 +491,7 @@ public class ShangXianUtil {
                 sb.append("ifnull("+domainName+"." + ss + ",'')");
                 ss = _aToA(ss);
                 sb.append(" as " + ss + ", ");
-           }else{
+            }else{
                 sb.append("ifnull(" + ss + ",'')");
                 ss = _aToA(ss);
                 sb.append(" as " + ss + ", ");

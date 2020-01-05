@@ -287,7 +287,7 @@ public class ShangXianUtil {
         insertMap.put("returnType","int");
         methods.add(insertMap);
 
-        sb.append("@Update(\"UPDATE "+tableName+" SET "+temp3.toString()+" where id=#{id}\")\n");
+        sb.append("@Update(\"UPDATE "+tableName+" SET "+temp3.toString()+" where uuid=#{uuid}\")\n");
         sb.append("public int update"+toUpperCaseFirstOne(domainName)+"("+toUpperCaseFirstOne(domainName)+" "+domainName+");\n");
         sb.append("\n");
         Map updateMap = new HashMap();
@@ -341,6 +341,8 @@ public class ShangXianUtil {
             if(type.equals("int")){type = "integer";}
             if(type.equals("double")){type = "number";}
             if(type.equals("Date")){type = "string";}
+            if(type.equals("char")){type = "string";}
+            if(type.equals("tinyint")){type = "integer";}
 
             sb.append("@ApiModelProperty(dataType = \""+type+"\",name = \""+getStr(m.get("domainParam"),"")+"\",value = \""+getStr(m.get("comment"),"")+"\")\n");
             sb.append("private " + getStr(m.get("domainType"),"") + " "+getStr(m.get("domainParam"),"")+";"+"//"+getStr(m.get("comment"),"")+"\n");
@@ -357,6 +359,7 @@ public class ShangXianUtil {
         System.out.println(sb.toString());
         writeToTxt(toUpperCaseFirstOne(domainName)+".java",parentPath,sb.toString());
     }
+
     /**
      * 根据表Dll(对象信息)获取:表名,,表字段,,表字段类型,,字段注释,,实体对象字段,,实体对象类型,,类名
      * @return
@@ -533,8 +536,8 @@ public class ShangXianUtil {
      * @return
      */
     private static String sqlTypeToDomainType(String str){
-        String[] aa = {"int","varchar","datetime","timestamp","decimal","smallint"};
-        String[] AA = {"int","String","Date","Date","double","int"};
+        String[] aa = {"varchar","datetime","timestamp","decimal","smallint","char","tinyint","int"};
+        String[] AA = {"String","Date","Date","double","Integer","String","Integer","Integer"};
         for (int i = 0; i < aa.length; i++) {
             str = str.replaceAll(aa[i], AA[i]);
         }

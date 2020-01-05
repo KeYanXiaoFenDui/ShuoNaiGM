@@ -375,6 +375,7 @@ public class TempletController {
 
             List<ParamObjectVo> params = apiObjectVo.getParams();
             List<ParamObjectVo> paramso = apiObjectVo.getParamso();
+            createOutputVo(paramso,apiName);
             if(paramso != null && paramso.size() > 0){
                 for (ParamObjectVo param : paramso){
                     String paramTitle = param.getParamTitle();
@@ -581,6 +582,27 @@ public class TempletController {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
         return CommonUtil.ToResultHashMap(status,message,data);
+    }
+
+    public void createOutputVo(List<ParamObjectVo> paramso,String voName){
+        StringBuffer sb = new StringBuffer();
+        sb.append("import java.io.Serializable;\n");
+        sb.append("import java.util.Date;\n");
+        sb.append("import io.swagger.annotations.ApiModelProperty;\n");
+        sb.append("public class "+ShangXianUtil.toUpperCaseFirstOne(voName)+" implements Serializable {\n");
+        for(ParamObjectVo m:paramso){
+            String type = CommonUtil.getStr(m.getParamType(),"");
+            if(type.equals("String")){type = "string";}
+            if(type.equals("int")){type = "integer";}
+            if(type.equals("double")){type = "number";}
+            if(type.equals("Date")){type = "string";}
+
+            sb.append("@ApiModelProperty(dataType = \""+type+"\",name = \""+CommonUtil.getStr(m.getParamName(),"")+"\",value = \""+CommonUtil.getStr(m.getParamComment(),"")+"\")\n");
+            sb.append("private " + CommonUtil.getStr(m.getParamType(),"") + " "+CommonUtil.getStr(m.getParamName(),"")+";"+"//"+CommonUtil.getStr(m.getParamComment(),"")+"\n");
+        }
+        sb.append("\n");
+        sb.append("}");
+        ShangXianUtil.writeToTxt(ShangXianUtil.toUpperCaseFirstOne(voName)+".java","cn.dankal.microsoft.model.cms.vo",sb.toString());
     }
 
     @ResponseBody
